@@ -73,29 +73,37 @@ const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
 };
 
-const input = document.querySelector("#image");
+const splitImage = (src, w, h) => {
+  // Takes an in image url, a width and a height and returns an object containing the fragmented images
 
-const canvas = document.querySelector("#canvas");
-const width = 1024;
-const height = 1024;
+  return new Promise(resolve => {
+    const canvas = document.createElement("canvas");
+    // const ctx = canvas.getContext("2d");
+    canvas.width = w;
+    canvas.height = h;
 
-const images = {
-  width: width,
-  height: height,
-  nCols: Math.sqrt(width),
-  nRows: Math.sqrt(height),
-  items: []
+    const images = {
+      width: w,
+      height: h,
+      nCols: Math.sqrt(w),
+      nRows: Math.sqrt(h),
+      items: [],
+      fullCanvas: canvas
+    };
+    resizeImage(input.src, w, h).then(img => {
+      // This does not need to be seen, but needs to be physically added to DOM to be recognised as an image correctly
+      const temp = document.body.appendChild(img);
+      temp.style.visibility = "hidden";
+      temp.style.display = "none";
+
+      images.items = fragmentToCanvi(img, Math.sqrt(w), Math.sqrt(h), canvas);
+      resolve(images);
+    });
+  });
 };
-resizeImage(input.src, 1024, 1024).then(img => {
-  // This does not need to be seen, but needs to be physically added to DOM to be recognised as an image correctly
-  const temp = document.body.appendChild(img);
-  temp.style.visibility = "hidden";
-  temp.style.display = "none";
 
-  images.items = fragmentToCanvi(
-    img,
-    Math.sqrt(width),
-    Math.sqrt(height),
-    canvas
-  );
+const input = document.querySelector("#image");
+splitImage(input.src, 1024, 1024).then(images => {
+  document.body.appendChild(images.fullCanvas);
+  console.log(images.items);
 });
