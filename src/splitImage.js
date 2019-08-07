@@ -70,10 +70,6 @@ const fragmentToCanvi = (image, w, h, dest) => {
   return canvi;
 };
 
-const toImages = canvi => {
-  return canvi.map(canvas => canvas.toDataURL("image/jpg"));
-};
-
 const splitImage = (src, w, h) => {
   // Takes an in image url, a width and a height and returns an object containing the fragmented images
 
