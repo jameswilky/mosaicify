@@ -7,6 +7,7 @@ const getAverageColor = input => {
   try {
     rgb = colorThief.getColor(input);
   } catch (e) {
+    // If error retreiving color, give it a white value
     rgb = [255, 255, 255];
   }
 
