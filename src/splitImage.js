@@ -69,6 +69,7 @@ const fragmentToCanvi = (image, w, h, dest) => {
   }
   return canvi;
 };
+
 const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
 };
@@ -90,7 +91,7 @@ const splitImage = (src, w, h) => {
       items: [],
       fullCanvas: canvas
     };
-    resizeImage(input.src, w, h).then(img => {
+    resizeImage(src, w, h).then(img => {
       // This does not need to be seen, but needs to be physically added to DOM to be recognised as an image correctly
       const temp = document.body.appendChild(img);
       temp.style.visibility = "hidden";
@@ -102,8 +103,4 @@ const splitImage = (src, w, h) => {
   });
 };
 
-const input = document.querySelector("#image");
-splitImage(input.src, 1024, 1024).then(images => {
-  document.body.appendChild(images.fullCanvas);
-  console.log(images.items);
-});
+export default splitImage;
