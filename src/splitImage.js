@@ -79,12 +79,12 @@ const splitImage = (src, w, h) => {
     canvas.width = w;
     canvas.height = h;
 
-    const images = {
+    const mosaic = {
       width: w,
       height: h,
       nCols: Math.sqrt(w),
       nRows: Math.sqrt(h),
-      items: [],
+      fragments: [],
       fullCanvas: canvas
     };
     resizeImage(src, w, h).then(img => {
@@ -93,8 +93,13 @@ const splitImage = (src, w, h) => {
       temp.style.visibility = "hidden";
       temp.style.display = "none";
 
-      images.items = fragmentToCanvi(img, Math.sqrt(w), Math.sqrt(h), canvas);
-      resolve(images);
+      mosaic.fragments = fragmentToCanvi(
+        img,
+        Math.sqrt(w),
+        Math.sqrt(h),
+        canvas
+      );
+      resolve(mosaic);
     });
   });
 };
