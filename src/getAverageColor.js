@@ -17,7 +17,7 @@ const getAverageColor = image => {
       .map(color => parseInt(color));
   } catch (e) {
     // If error retreiving color, give it a white value
-    rgb = [255, 255, 255];
+    rgb = [0, 0, 0];
   }
 
   return rgb;

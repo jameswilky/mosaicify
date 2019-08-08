@@ -28,26 +28,30 @@ const getEuclideanDistance = (rgb1, rgb2) => {
     4 * Math.abs(rgb2[1] - rgb1[1]) +
     3 * Math.abs(rgb2[2] - rgb1[2]);
 
-  return adjusted;
+  return standard;
 };
 
 const findBestImages = (palette, fragmentMap) => {
   return {
     ...fragmentMap,
-    fragments: fragmentMap.fragments.map(fragment => {
+    fragments: fragmentMap.fragments.map((fragment, i) => {
       const distances = [];
       palette.forEach(image => {
         distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
       });
       const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
       const bestFitImage = palette[bestFitIndex].image;
+      // if (i == 0) {
+      //   let image = fragment.rgb;
 
+      //   console.log(image, bestFitImage);
+      // }
       return { ...fragment, mosaicImage: bestFitImage };
     })
   };
 };
 
-export default async (src, width, height) => {
+export default async (src, width, height, paths) => {
   // TODO adjust width and height to have an interger square root
 
   // Split the input image into fragments
@@ -55,16 +59,12 @@ export default async (src, width, height) => {
   // Return an average rgb value for each canvas item
   const mosaicMappedByColor = mapFragmentsByColor(mosaic);
 
-  const imagePalette = await getImagePalette();
-  // Return an average rgb value for each mosaicImage
+  const imagePalette = await getImagePalette(paths);
+  // Return an average rgb value for each palette image
   const colorMappedImagePallete = imagePalette.map(image => {
     return { image: image, rgb: getAverageColor(image) };
   });
 
   // Finally, find the mosaic images that best match each required fragment of the original image
-  const finalMosaic = findBestImages(
-    colorMappedImagePallete,
-    mosaicMappedByColor
-  );
-  return finalMosaic;
+  return findBestImages(colorMappedImagePallete, mosaicMappedByColor);
 };

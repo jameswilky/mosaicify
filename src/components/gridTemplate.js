@@ -25,7 +25,7 @@ const gridTemplate = mosaic => {
         ({ mosaicImage }) =>
           `<img style="${styles.item}" src=${mosaicImage.src}>`
       )
-      .join("")}
+      .join("")} 
   </div>
   `;
 };

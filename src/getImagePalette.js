@@ -7,14 +7,7 @@ const checkImage = path =>
   });
 const loadImg = paths => Promise.all(paths.map(checkImage));
 
-const getImagePalette = async () => {
-  const prefix = "../images/mosaic/";
-  const paths = [
-    `${prefix}black.jpg`,
-    `${prefix}white.jpg`,
-    `${prefix}yellow.jpg`
-  ];
-
+const getImagePalette = async paths => {
   return await loadImg(paths);
 };
 export default getImagePalette;
