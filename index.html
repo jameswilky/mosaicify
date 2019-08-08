@@ -2,13 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
+    <script src="https://kit.fontawesome.com/157922a9e8.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="main.css" />
   </head>
   <body>
-    <img class="inputImage" src="./images/host/b.jpg" alt="" />
+    <!-- <img class="inputImage" src="./images/host/c.jpg" alt="" /> -->
+    <main>
+      <section class="searchContainer">
+        <header>
+          <h1>Mosaicify</h1>
+        </header>
+        <form action="">
+          <div>
+            <p>Create a Mosaic of</p>
+            <input type="text" placeholder="an image" />
+            <p>out of</p>
+            <input type="text" placeholder="other images" />
+          </div>
+          <div>
+            <label for="fileUpload">
+              <p content="upload">
+                or upload an image from your computer
+                <i class="fas fa-file-upload"></i></p
+            ></label>
+            <input type="file" accept="image/*" id="fileUpload" />
+          </div>
+          <div><button type="submit">Mosaicify!</button></div>
+        </form>
+      </section>
+      <section class="mainContainer"></section>
+      <footer></footer>
+    </main>
 
     <script type="module" src="./src/main.js"></script>
   </body>

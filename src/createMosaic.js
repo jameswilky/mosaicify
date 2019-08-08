@@ -41,11 +41,6 @@ const findBestImages = (palette, fragmentMap) => {
       });
       const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
       const bestFitImage = palette[bestFitIndex].image;
-      // if (i == 0) {
-      //   let image = fragment.rgb;
-
-      //   console.log(image, bestFitImage);
-      // }
       return { ...fragment, mosaicImage: bestFitImage };
     })
   };
