@@ -9,6 +9,7 @@
   "author": "James Wilkinson",
   "license": "ISC",
   "dependencies": {
-    "colorthief": "^2.3.0"
+    "colorthief": "^2.3.0",
+    "fast-average-color": "^5.2.0"
   }
 }

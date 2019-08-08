@@ -1,10 +1,6 @@
 const gridTemplate = mosaic => {
   const { width, height, nCols, nRows, fragments } = mosaic;
 
-  const Grid = () => {
-    fragments.map();
-  };
-
   const styles = {
     container: `
     width: ${width}px;
@@ -14,11 +10,22 @@ const gridTemplate = mosaic => {
     display: grid;
     grid-template-rows: repeat(${nRows}, 1fr);
     grid-template-columns: repeat(${nCols}, 1fr);
+    `,
+    item: `
+    display: grid; 
+    width: ${width / nCols}px; 
+    height: ${height / nRows}px;
     `
   };
 
   return `
   <div style="${styles.container}">
+    ${fragments
+      .map(
+        ({ mosaicImage }) =>
+          `<img style="${styles.item}" src=${mosaicImage.src}>`
+      )
+      .join("")}
   </div>
   `;
 };

@@ -73,9 +73,11 @@ const fragmentToCanvi = (image, w, h, dest) => {
 const splitImage = (src, w, h) => {
   // Takes an in image url, a width and a height and returns an object containing the fragmented images
 
+  w = Math.floor(Math.sqrt(w)) ** 2;
+  h = Math.floor(Math.sqrt(h)) ** 2;
+
   return new Promise(resolve => {
     const canvas = document.createElement("canvas");
-    // const ctx = canvas.getContext("2d");
     canvas.width = w;
     canvas.height = h;
 
