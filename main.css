@@ -176,7 +176,7 @@ header {
   padding: 20px;
 }
 header > h1 {
-  font-size: 7rem;
+  font-size: 5.5rem;
   font-weight: 900;
   color: var(--white);
   text-shadow: 6px 6px rgba(50, 20, 150, 0.3);
@@ -205,9 +205,13 @@ header > h1 {
 
 input[type="text"] {
   background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+
+
   padding: 15px 0 15px 0;
   margin: 15px -47px 15px 10px;
   border-radius: 5px;
+  color:var(--white)
 }
 .fa-search {
   color: var(--white);
