@@ -1,6 +1,7 @@
 import splitImage from "./splitImage.js";
 import getAverageColor from "./getAverageColor.js";
 import getImagePalette from "./getImagePalette.js";
+import gridTemplate from "./components/gridTemplate.js";
 
 const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
@@ -25,22 +26,26 @@ const getEuclideanDistance = (rgb1, rgb2) => {
 };
 
 const createMosaic = (palette, fragmentMap) => {
-  return fragmentMap.fragments.map(fragment => {
-    const distances = [];
-    palette.forEach(image => {
-      distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
-    });
-    const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
-    const bestFitImage = palette[bestFitIndex].image;
+  return {
+    ...fragmentMap,
+    fragments: fragmentMap.fragments.map(fragment => {
+      const distances = [];
+      palette.forEach(image => {
+        distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
+      });
+      const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
+      const bestFitImage = palette[bestFitIndex].image;
 
-    return { ...fragment, mosaicImage: bestFitImage };
-  });
+      return { ...fragment, mosaicImage: bestFitImage };
+    })
+  };
 };
 
 const input = document.querySelector("#image");
 const width = 625;
 const height = 400;
 const main = async () => {
+  let start = performance.now();
   // TODO adjust width and height to have an interger square root
 
   // Split the input image into fragments
@@ -58,6 +63,14 @@ const main = async () => {
     colorMappedImagePallete,
     mosaicMappedByColor
   );
-  console.log(finalMosaic);
+  let end = performance.now();
+
+  const grid = document.createElement("div");
+  grid.innerHTML = gridTemplate(finalMosaic);
+  document.body.appendChild(grid);
+  console.log(grid);
+
+  // TODO print final mosaic onto the grid
+  console.log("Completed in " + (end - start) / 1000 + " seconds");
 };
 main();
