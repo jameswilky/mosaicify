@@ -6,7 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <script src="https://kit.fontawesome.com/157922a9e8.js"></script>
-
+    <link
+      href="https://fonts.googleapis.com/css?family=Josefin+Sans|Red+Hat+Display&display=swap"
+      rel="stylesheet"
+    />
     <link
       href="https://fonts.googleapis.com/css?family=Raleway&display=swap"
       rel="stylesheet"
@@ -22,10 +25,17 @@
         </header>
         <form action="">
           <div>
-            <p>Create a Mosaic of</p>
-            <input type="text" placeholder="an image" />
-            <p>out of</p>
-            <input type="text" placeholder="other images" />
+            <div>
+              <p>Create a Mosaic of</p>
+              <input type="text" placeholder="an image" />
+              <i class="fas fa-search"></i>
+            </div>
+
+            <div>
+              <p>out of</p>
+              <input type="text" placeholder="other images" />
+              <i class="fas fa-search"></i>
+            </div>
           </div>
           <div>
             <label for="fileUpload">
@@ -35,7 +45,7 @@
             ></label>
             <input type="file" accept="image/*" id="fileUpload" />
           </div>
-          <div><button type="submit">Mosaicify!</button></div>
+          <div><button type="submit">Mosaicify !</button></div>
         </form>
       </section>
       <section class="mainContainer"></section>
