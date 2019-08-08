@@ -197,7 +197,7 @@ header > h1 {
   justify-items: center;
   align-items: center;
   grid-template-rows: 1fr 50px 100px;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   color: #111111;
   font-weight: 700;
   text-align: center;
@@ -253,7 +253,7 @@ input::placeholder {
   font-style: italic;
   color : var(--white);
   font-weight: 100;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
 }
 
 p[content="upload"] {
@@ -290,6 +290,8 @@ button[type="submit"]:hover {
   -moz-animation: rainbowBackground 0.8s infinite alternate; /* Firefox */
   -webkit-animation: rainbowBackground 0.8s infinite alternate; /* Safari and Chrome */
 }
+button:focus { outline-style: none; }
+
 @-moz-keyframes rainbowText /* Firefox */ {
   0% {
     color: #d16ba5;

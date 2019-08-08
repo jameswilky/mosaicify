@@ -22,3 +22,28 @@ const main = async () => {
   grid.innerHTML = gridTemplate(mosaic);
   document.body.appendChild(grid);
 };
+
+const App = {
+  events: {
+    submit: e => {
+      e.preventDefault();
+    }
+  },
+  $: {},
+  cacheDOM: function() {
+    return {
+      body: document.querySelector("body"),
+      submit: document.querySelector(".submit")
+    };
+  },
+  createEvents: events => {
+    document.addEventListener("click", events.submit);
+  },
+  deleteEvents: () => {},
+  render: function() {
+    this.deleteEvents();
+    this.createEvents(this.events);
+    Object.assign(this.$, this.cacheDOM());
+  }
+};
+App.render();
