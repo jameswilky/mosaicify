@@ -33,8 +33,13 @@ export default (limit = 3) => {
   const getImage = async q => {
     const res = await fetch(`${url}&q=${toQuery(q)}`);
     const data = await res.json();
-
-    return fetch(data.hits[0].webformatURL).then(img => img.url);
+    const webformatURL = await fetch(data.hits[0].webformatURL);
+    const src = await getBase64Image(webformatURL.url);
+    return {
+      src: src,
+      width: data.hits[0].webformatWidth,
+      height: data.hits[0].webformatHeight
+    };
   };
   const getImages = async q => {
     // Querys API and finds images for each color
@@ -43,13 +48,18 @@ export default (limit = 3) => {
       urls.map(url => fetch(url).then(res => res.json()))
     );
 
-    const images = results.map(result => {
-      return result.hits.map(({ previewURL }) => {
-        return fetch(previewURL).then(img => img.url);
-      });
-    });
+    const imageUrls = await Promise.all(
+      results
+        .map(result => {
+          return result.hits.map(({ previewURL }) => {
+            return fetch(previewURL).then(img => img.url);
+          });
+        })
+        .flat()
+    );
 
-    return Promise.all(images.flat());
+    const paths = imageUrls.map(url => getBase64Image(url));
+    return Promise.all(paths);
   };
 
   return { getImage, getImages };

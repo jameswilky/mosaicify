@@ -4,6 +4,7 @@ import formToJSON from "./helpers/formToJSON.js";
 import getFileName from "./helpers/getFileName.js";
 import toImage from "./helpers/toImage.js";
 import Pixabay from "./helpers/pixabay.js";
+import getBase64Image from "./helpers/getBase64Image.js";
 
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
@@ -13,27 +14,32 @@ const registerEvents = $ => {
     // TODO validate form
 
     //If Valid...
-    const pixabay = Pixabay(); // Used for pixabay api
+    const pixabay = Pixabay(20); // Used for pixabay api
     const paths = await pixabay.getImages(form.mosaicImages);
-    console.log(paths);
-    // Create a list of files from pixabay
-    // Given a mosaic Name, search for each color
-    // return the previewImage of each color
-    // then pass those file names to createMosaic
-    // if ($.uploadedFile) {
-    //   const { src, width, height } = $.uploadedFile;
-    //   // Fetch Mosaic Images
-    //   $.mosaic = await createMosaic(src, width, height, paths);
-    // }
-    //else {
-    // const {src,width,height} = Fetch Host Image
-    // const paths = Fetch Mosaic Images
-    //$.mosaic = await createMosaic(src, width, height, paths);
-    //}
+    paths.push("./images/mosaic/yellow.jpg");
+    // // Fetch Mosaic Images
+    if ($.uploadedFile) {
+      const { src, width, height } = $.uploadedFile;
+      $.mosaic = await createMosaic(src, width, height, paths);
+      console.log(paths.length);
+      console.log(src);
+    } else {
+      const { src, width, height } = await pixabay.getImage(form.targetImage);
+      $.mosaic = await createMosaic(src, width, height, paths);
+      console.log(paths.length);
+      console.log(src);
+    }
 
-    // const grid = document.createElement("div");
-    // grid.innerHTML = gridTemplate($.mosaic);
-    // document.body.appendChild(grid);
+    // //}
+    // //else {
+    // // const {src,width,height} = Fetch Host Image
+    // // const paths = Fetch Mosaic Images
+    // //$.mosaic = await createMosaic(src, width, height, paths);
+    // //}
+
+    const grid = document.createElement("div");
+    grid.innerHTML = gridTemplate($.mosaic);
+    document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
