@@ -1,5 +1,5 @@
 import createMosaic from "./helpers/Mosaic/createMosaic.js";
-import gridTemplate from "./components/gridTemplate.js";
+import gridTemplate from "./views/gridTemplate.js";
 import formToJSON from "./helpers/formToJSON.js";
 import getFileName from "./helpers/getFileName.js";
 import toImage from "./helpers/toImage.js";

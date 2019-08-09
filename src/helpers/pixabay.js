@@ -30,18 +30,27 @@ export default (limit = 3) => {
     return colors.map(color => `${url}&q=${toQuery(q)}&color=${color}`);
   };
 
-  const getImages = async q => {
-    const urls = createAPICalls(q);
-    const res = await fetch(urls[0]);
+  const getImage = async q => {
+    const res = await fetch(`${url}&q=${toQuery(q)}`);
     const data = await res.json();
-    const images = data.hits.map(({ previewURL }) => {
-      return fetch(previewURL).then(img => img.url);
+
+    return fetch(data.hits[0].webformatURL).then(img => img.url);
+  };
+  const getImages = async q => {
+    // Querys API and finds images for each color
+    const urls = createAPICalls(q);
+    const results = await Promise.all(
+      urls.map(url => fetch(url).then(res => res.json()))
+    );
+
+    const images = results.map(result => {
+      return result.hits.map(({ previewURL }) => {
+        return fetch(previewURL).then(img => img.url);
+      });
     });
 
-    return Promise.all(images);
+    return Promise.all(images.flat());
   };
 
-  return {
-    getImages
-  };
+  return { getImage, getImages };
 };
