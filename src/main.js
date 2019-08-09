@@ -4,6 +4,7 @@ import formToJSON from "./helpers/formToJSON.js";
 import getFileName from "./helpers/getFileName.js";
 import toImage from "./helpers/toImage.js";
 import getBase64Image from "./helpers/getBase64Image.js";
+import keys from "../keys.js";
 
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
