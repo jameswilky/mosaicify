@@ -3,8 +3,7 @@ import gridTemplate from "./components/gridTemplate.js";
 import formToJSON from "./helpers/formToJSON.js";
 import getFileName from "./helpers/getFileName.js";
 import toImage from "./helpers/toImage.js";
-import getBase64Image from "./helpers/getBase64Image.js";
-import keys from "../keys.js";
+import Pixabay from "./helpers/pixabay.js";
 
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
@@ -14,34 +13,27 @@ const registerEvents = $ => {
     // TODO validate form
 
     //If Valid...
-    const prefix = "../images/mosaic/";
-    // This should only contain data urls, not http images blocked by Cors
-    const paths = [
-      `${prefix}black.jpg`,
-      `${prefix}white.jpg`,
-      `${prefix}yellow.jpg`
-    ];
-
-    const img = await getBase64Image(
-      "https://pixabay.com/get/54e8d4464f57a414f6da8c7dda79367d1739d8e25a546c4870297ed79444c750bf_640.jpg"
-    );
-    paths.push(img);
+    const pixabay = Pixabay(); // Used for pixabay api
+    const paths = await pixabay.getImages(form.mosaicImages);
     console.log(paths);
-    // If File Specified
-    if ($.uploadedFile) {
-      const { src, width, height } = $.uploadedFile;
-      // Fetch Mosaic Images
-      $.mosaic = await createMosaic(src, width, height, paths);
-    }
+    // Create a list of files from pixabay
+    // Given a mosaic Name, search for each color
+    // return the previewImage of each color
+    // then pass those file names to createMosaic
+    // if ($.uploadedFile) {
+    //   const { src, width, height } = $.uploadedFile;
+    //   // Fetch Mosaic Images
+    //   $.mosaic = await createMosaic(src, width, height, paths);
+    // }
     //else {
     // const {src,width,height} = Fetch Host Image
     // const paths = Fetch Mosaic Images
     //$.mosaic = await createMosaic(src, width, height, paths);
     //}
 
-    const grid = document.createElement("div");
-    grid.innerHTML = gridTemplate($.mosaic);
-    document.body.appendChild(grid);
+    // const grid = document.createElement("div");
+    // grid.innerHTML = gridTemplate($.mosaic);
+    // document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
