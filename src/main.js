@@ -1,5 +1,6 @@
 import createMosaic from "./createMosaic.js";
 import gridTemplate from "./components/gridTemplate.js";
+import formToJSON from "./helpers/formToJSON.js";
 
 const main = async () => {
   const input = document.querySelector(".inputImage");
@@ -58,17 +59,26 @@ const main = async () => {
 // };
 // App.render();
 
-const $ = {
-  body: document.querySelector("body"),
-  submit: document.querySelector(".submit"),
-  form: document.querySelector("form")
-};
-
 const registerEvents = $ => {
   $.submit.addEventListener("click", e => {
     e.preventDefault();
+
+    const data = formToJSON($.form.elements);
+    console.log(data);
+  });
+
+  $.fileUpload.addEventListener("change", function() {
+    const file = this.value;
     console.log($.form);
   });
 };
 
-registerEvents($);
+window.onload = () => {
+  const $ = {
+    body: document.querySelector("body"),
+    submit: document.querySelector(".submit"),
+    form: document.forms["searchForm"],
+    fileUpload: document.querySelector("#fileUpload")
+  };
+  registerEvents($);
+};

@@ -134,7 +134,7 @@ table {
 :root {
   --black: #111111;
   --white: whitesmoke;
-  --gray: hsl(0, 0%, 84%);
+  --gray: hsl(0, 0%, 90%);
   --lightBlack: rgb(40, 44, 53);
   --rainbow: linear-gradient(
     to right bottom,
@@ -195,7 +195,7 @@ h1[theme="dark"] {
   justify-self: center;
 
   animation: fadein 2s;
-  padding: 60px 20px 0px 2px;
+  padding: 60px 10px 0px 10px;
   /* box-shadow: 3px 4px rgba(0, 20, 0, 0.2); */
 }
 .searchContainer form {
@@ -219,6 +219,8 @@ input[type="text"] {
   background-color: rgba(0, 0, 0, 0.05);
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
   padding: 15px 15px 15px 15px;
+  position: relative;
+  right: -11px;
   border-radius: 5px;
   color: var(--white);
 }
@@ -227,7 +229,7 @@ input[type="text"] {
   font-size: 1.4rem;
   position: relative;
   top: 5px;
-  right: 40px;
+  right: 30px;
 }
 input:focus {
   outline: none;
@@ -271,7 +273,7 @@ input::placeholder {
 p[content="upload"] {
   color: var(--gray);
   font-size: 1.2rem;
-  font-weight: 200;
+  font-weight: 100;
 }
 
 p[content="upload"]:hover {
@@ -310,7 +312,7 @@ footer {
   background-color: var(--white);
 }
 
-@-moz-keyframes rainbowText /* Firefox */ {
+@keyframes rainbowText {
   0% {
     color: #d16ba5;
   }
@@ -349,45 +351,7 @@ footer {
   }
 }
 
-@-webkit-keyframes rainbowText /* Safari and Chrome */ {
-  0% {
-    color: #d16ba5;
-  }
-  8% {
-    color: #c777b9;
-  }
-  16% {
-    color: #ba83ca;
-  }
-  24% {
-    color: #aa8fd8;
-  }
-  32% {
-    color: #9a9ae1;
-  }
-  40% {
-    color: #8aa7ec;
-  }
-  48% {
-    color: #79b3f4;
-  }
-  59% {
-    color: #69bff8;
-  }
-  75% {
-    color: #52cffe;
-  }
-  80% {
-    color: #41dfff;
-  }
-  90% {
-    color: #46eefa;
-  }
-  100% {
-    color: #5ffbf1;
-  }
-}
-@-moz-keyframes rainbowBackground /* Firefox */ {
+@keyframes rainbowBackground {
   0% {
     background-color: #d16ba5;
   }
@@ -426,44 +390,6 @@ footer {
   }
 }
 
-@-webkit-keyframes rainbowBackground /* Safari and Chrome */ {
-  0% {
-    background-color: #d16ba5;
-  }
-  8% {
-    background-color: #c777b9;
-  }
-  16% {
-    background-color: #ba83ca;
-  }
-  24% {
-    background-color: #aa8fd8;
-  }
-  32% {
-    background-color: #9a9ae1;
-  }
-  40% {
-    background-color: #8aa7ec;
-  }
-  48% {
-    background-color: #79b3f4;
-  }
-  59% {
-    background-color: #69bff8;
-  }
-  75% {
-    background-color: #52cffe;
-  }
-  80% {
-    background-color: #41dfff;
-  }
-  90% {
-    background-color: #46eefa;
-  }
-  100% {
-    background-color: #5ffbf1;
-  }
-}
 @keyframes fadein {
   from {
     opacity: 0;

@@ -23,17 +23,21 @@
         <header>
           <h1 theme="light">Mosaicify</h1>
         </header>
-        <form action="">
+        <form name="searchForm">
           <div>
             <div>
               <p>Create a Mosaic of</p>
-              <input type="text" placeholder="an image" />
+              <input name="targetImage" type="text" placeholder="an image" />
               <i class="fas fa-search"></i>
             </div>
 
             <div>
               <p>out of</p>
-              <input type="text" placeholder="other images" />
+              <input
+                name="mosaicImages"
+                type="text"
+                placeholder="other images"
+              />
               <i class="fas fa-search"></i>
             </div>
           </div>
@@ -43,7 +47,12 @@
                 or upload from disk
                 <i class="fas fa-file-upload"></i></p
             ></label>
-            <input type="file" accept="image/*" id="fileUpload" />
+            <input
+              name="uploadedImage"
+              type="file"
+              accept="image/*"
+              id="fileUpload"
+            />
           </div>
           <div><button class="submit" type="submit">Mosaicify !</button></div>
         </form>
