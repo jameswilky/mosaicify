@@ -125,29 +125,18 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+* {
+  box-sizing: border-box;
+}
 /* end of CSS Reset*/
 
-
-
-:root{
+:root {
   --black: #111111;
   --white: whitesmoke;
   --gray: hsl(0, 0%, 84%);
-  --lightBlack: rgb(40,44,53);
- 
-}
-
-* {
-  /* font-family: "Raleway", sans-serif; */
-  /* font-family: 'Red Hat Display', sans-serif; */
-  font-family: 'Josefin Sans', sans-serif;
-
-
-}
-body {
-  min-height: 100vh;
-  /* background-color: var(--lightBlack); */
-  background-image: linear-gradient(
+  --lightBlack: rgb(40, 44, 53);
+  --rainbow: linear-gradient(
     to right bottom,
     #d16ba5,
     #c777b9,
@@ -163,60 +152,83 @@ body {
     #5ffbf1
   );
 }
-main {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  margin-top: 100px;
-  grid-template-rows: 400px 1fr 50px;
+
+* {
+  /* font-family: "Raleway", sans-serif; */
+  /* font-family: 'Red Hat Display', sans-serif; */
+  font-family: "Josefin Sans", sans-serif;
 }
+
+body {
+  min-height: calc(100vh);
+}
+body[theme="light"] {
+  background-image: var(--rainbow);
+}
+body[theme="dark"] {
+  background-color: var(--lightBlack);
+}
+
 header {
   display: grid;
   justify-self: center;
-  padding: 20px;
+  padding: 10px 0px 20px 0px;
 }
 header > h1 {
-  font-size: 5.5rem;
+  font-size: 4rem;
   font-weight: 900;
+}
+h1[theme="light"] {
   color: var(--white);
   text-shadow: 6px 6px rgba(50, 20, 150, 0.3);
+}
+h1[theme="dark"] {
+  background-image: var(--rainbow);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 6px 6px rgba(200, 170, 200, 0.1);
 }
 .searchContainer {
   display: grid;
   align-self: center;
   justify-self: center;
 
-  padding: 20px;
   animation: fadein 2s;
-  margin: 20px;
+  padding: 60px 20px 0px 2px;
   /* box-shadow: 3px 4px rgba(0, 20, 0, 0.2); */
-  min-width: 800px;
 }
 .searchContainer form {
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-template-rows: 1fr 50px 100px;
+  grid-template-rows: 1fr 40px 90px;
   font-size: 1.5rem;
   color: #111111;
   font-weight: 700;
   text-align: center;
+  height: 350px;
+}
+
+/* form inputs*/
+form div:first-child * {
+  margin: 0 0 10px 0;
 }
 
 input[type="text"] {
   background-color: rgba(0, 0, 0, 0.05);
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-
-
-  padding: 15px 0 15px 0;
-  margin: 15px -47px 15px 10px;
+  padding: 15px 15px 15px 15px;
   border-radius: 5px;
-  color:var(--white)
+  color: var(--white);
 }
 .fa-search {
   color: var(--white);
   font-size: 1.4rem;
-]}
+  position: relative;
+  top: 5px;
+  right: 40px;
+}
 input:focus {
   outline: none;
 }
@@ -234,7 +246,7 @@ input:focus:-ms-input-placeholder {
 } /* IE 10+ */
 
 input {
-  width: 300px;
+  width: 250px;
   text-align: center;
 
   /* Reset */
@@ -251,7 +263,7 @@ input {
 
 input::placeholder {
   font-style: italic;
-  color : var(--white);
+  color: var(--white);
   font-weight: 100;
   font-size: 1.5rem;
 }
@@ -290,7 +302,13 @@ button[type="submit"]:hover {
   -moz-animation: rainbowBackground 0.8s infinite alternate; /* Firefox */
   -webkit-animation: rainbowBackground 0.8s infinite alternate; /* Safari and Chrome */
 }
-button:focus { outline-style: none; }
+button:focus {
+  outline-style: none;
+}
+
+footer {
+  background-color: var(--white);
+}
 
 @-moz-keyframes rainbowText /* Firefox */ {
   0% {
