@@ -153,6 +153,19 @@ table {
   );
 }
 
+/* remove chrome autofill*/
+@keyframes autofill {
+  to {
+    color: #666;
+    background: transparent;
+  }
+}
+
+input:-webkit-autofill {
+  animation-name: autofill;
+  animation-fill-mode: both;
+}
+
 * {
   /* font-family: "Raleway", sans-serif; */
   /* font-family: 'Red Hat Display', sans-serif; */
@@ -167,6 +180,10 @@ body[theme="light"] {
 }
 body[theme="dark"] {
   background-color: var(--lightBlack);
+}
+
+.inputImage {
+  display: none;
 }
 
 header {
@@ -189,6 +206,7 @@ h1[theme="dark"] {
   background-clip: text;
   text-shadow: 6px 6px rgba(200, 170, 200, 0.1);
 }
+
 .searchContainer {
   display: grid;
   align-self: center;
@@ -218,11 +236,14 @@ form div:first-child * {
 input[type="text"] {
   background-color: rgba(0, 0, 0, 0.05);
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-  padding: 15px 15px 15px 15px;
+  padding: 15px 35px 15px 15px;
   position: relative;
   right: -11px;
   border-radius: 5px;
   color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .fa-search {
   color: var(--white);
@@ -265,7 +286,7 @@ input {
 
 input::placeholder {
   font-style: italic;
-  color: var(--white);
+  color: rgb(200, 200, 200);
   font-weight: 100;
   font-size: 1.5rem;
 }
