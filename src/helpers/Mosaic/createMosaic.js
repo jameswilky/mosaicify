@@ -59,11 +59,11 @@ const test = (palette, fragmentMap) => {
   });
 };
 
-export default async (src, width, height, paths) => {
+export default async (src, width, height, paths, scale = 1) => {
   // TODO adjust width and height to have an interger square root
 
   // Split the input image into fragments
-  const mosaic = await splitImage(src, width, height);
+  const mosaic = await splitImage(src, width, height, scale);
   // Return an average rgb value for each canvas item
   const mosaicMappedByColor = mapFragmentsByColor(mosaic);
 

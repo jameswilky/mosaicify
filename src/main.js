@@ -6,6 +6,9 @@ import toImage from "./helpers/toImage.js";
 import Pixabay from "./helpers/pixabay.js";
 import getBase64Image from "./helpers/getBase64Image.js";
 
+// TODO convert final dom element to an image element
+// TODO refactor createMosaic into a Factory
+// Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
     e.preventDefault();
@@ -37,12 +40,11 @@ const registerEvents = $ => {
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, uniquePaths);
+      $.mosaic = await createMosaic(src, width, height, uniquePaths, 2);
     } else {
       const { src, width, height } = await pixabay.getImage(form.targetImage);
-      $.mosaic = await createMosaic(src, width, height, uniquePaths);
+      $.mosaic = await createMosaic(src, width, height, uniquePaths, 1);
     }
-    console.log("test");
 
     // //}
     // //else {
@@ -53,7 +55,9 @@ const registerEvents = $ => {
 
     const grid = document.createElement("div");
     grid.innerHTML = gridTemplate($.mosaic);
-    document.body.appendChild(grid);
+    console.log("finished");
+    // TODO implement this to append grid https://github.com/tsayen/dom-to-image
+    // document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
