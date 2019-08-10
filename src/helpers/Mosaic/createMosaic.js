@@ -23,12 +23,13 @@ const getEuclideanDistance = (rgb1, rgb2) => {
     Math.abs(rgb2[2] - rgb1[2]);
 
   // Reference: https://en.wikipedia.org/wiki/Color_difference
-  const adjusted =
-    2 * Math.abs(rgb2[0] - rgb1[0]) +
-    4 * Math.abs(rgb2[1] - rgb1[1]) +
-    3 * Math.abs(rgb2[2] - rgb1[2]);
-
-  return standard;
+  const adjusted = Math.sqrt(
+    2 * (rgb2[0] - rgb1[0]) ** 2 +
+      4 * (rgb2[1] - rgb1[1]) ** 2 +
+      3 * (rgb2[2] - rgb1[2]) ** 2
+  );
+  console.log(standard, adjusted);
+  return adjusted;
 };
 
 const findBestImages = (palette, fragmentMap) => {
@@ -45,6 +46,26 @@ const findBestImages = (palette, fragmentMap) => {
     })
   };
 };
+const test = (palette, fragmentMap) => {
+  fragmentMap.fragments.forEach((fragment, i) => {
+    const distances = [];
+    palette.forEach(image => {
+      distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
+      if (i == 0) {
+        // console.log(image.rgb, image.image.src);
+      }
+    });
+    const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
+    const bestFitImage = palette[bestFitIndex].image;
+    // if (i == 0) {
+    //   // console.log(palette[bestFitIndex]);
+    // }
+    const x = palette[bestFitIndex];
+    if (i == 0) {
+      console.log(x);
+    }
+  });
+};
 
 export default async (src, width, height, paths) => {
   // TODO adjust width and height to have an interger square root
@@ -56,10 +77,19 @@ export default async (src, width, height, paths) => {
 
   const imagePalette = await getImagePalette(paths);
   // Return an average rgb value for each palette image
-  const colorMappedImagePallete = imagePalette.map(image => {
-    return { image: image, rgb: getAverageColor(image) };
-  });
+  const colorMappedImagePallete = imagePalette
+    .map(image => {
+      const rgb = getAverageColor(image);
+      const isTransparent = rgb => rgb[0] == 0 && rgb[1] == 0 && rgb[2] == 0;
+      if (isTransparent(rgb)) {
+        return null;
+      }
 
+      return { image: image, rgb: rgb };
+    })
+    .filter(obj => obj !== null);
+
+  test(colorMappedImagePallete, mosaicMappedByColor);
   // Finally, find the mosaic images that best match each required fragment of the original image
   return findBestImages(colorMappedImagePallete, mosaicMappedByColor);
 };

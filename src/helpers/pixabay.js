@@ -2,12 +2,13 @@ import keys from "../../keys.js";
 import getBase64Image from "../helpers/getBase64Image.js";
 export default (limit = 3) => {
   const key = keys.PIXABAY_API_KEY;
-  const url = `https://pixabay.com/api/?key=${key}&image_type=photo&safesearch=true&per_page=${limit}`;
+  const url = `https://pixabay.com/api/?key=${key}&safesearch=true&per_page=${limit}`;
 
+  // todo find way of removing transparent images
   // As defined by documentation https://pixabay.com/api/docs/
   const colors = [
+    "",
     "grayscale",
-    "transparent",
     "red",
     "orange",
     "yellow",
@@ -22,12 +23,13 @@ export default (limit = 3) => {
     "brown"
   ];
 
+  // TOOD we are currently taking the first responce from each page, but this might mean we are getting the same image for each color
   const toQuery = q => {
     return q.replace(" ", "+");
   };
 
   const createAPICalls = q => {
-    return colors.map(color => `${url}&q=${toQuery(q)}&color=${color}`);
+    return colors.map(color => `${url}&q=${color}+${toQuery(q)}`);
   };
 
   const getImage = async q => {
@@ -59,7 +61,7 @@ export default (limit = 3) => {
     );
 
     const paths = imageUrls.map(url => getBase64Image(url));
-    return Promise.all(paths);
+    return await Promise.all(paths);
   };
 
   return { getImage, getImages };

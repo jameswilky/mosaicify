@@ -16,19 +16,33 @@ const registerEvents = $ => {
     //If Valid...
     const pixabay = Pixabay(20); // Used for pixabay api
     const paths = await pixabay.getImages(form.mosaicImages);
-    paths.push("./images/mosaic/yellow.jpg");
-    // // Fetch Mosaic Images
+    const uniquePaths = paths.unique();
+
+    // const prefix = "../images/mosaic/";
+    // const uniquePaths = [
+    //   `${prefix}black.jpg`,
+    //   `${prefix}beige.jpg`,
+    //   `${prefix}blue.jpg`,
+    //   `${prefix}gray.jpg`,
+    //   `${prefix}green.jpg`,
+    //   `${prefix}orange.jpg`,
+    //   `${prefix}purple.jpg`,
+    //   `${prefix}orange.jpg`,
+    //   `${prefix}purple.jpg`,
+    //   `${prefix}red.jpg`,
+    //   `${prefix}white.jpg`,
+    //   `${prefix}yellow.jpg`
+    // ];
+
+    // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, paths);
-      console.log(paths.length);
-      console.log(src);
+      $.mosaic = await createMosaic(src, width, height, uniquePaths);
     } else {
       const { src, width, height } = await pixabay.getImage(form.targetImage);
-      $.mosaic = await createMosaic(src, width, height, paths);
-      console.log(paths.length);
-      console.log(src);
+      $.mosaic = await createMosaic(src, width, height, uniquePaths);
     }
+    console.log("test");
 
     // //}
     // //else {
@@ -69,7 +83,6 @@ window.onload = () => {
     mosaic: null
   };
   registerEvents($);
-  console.log($);
 };
 
 // const App = {
@@ -105,3 +118,10 @@ window.onload = () => {
 //   }
 // };
 // App.render();
+
+/* Primitive modificatons*/
+Array.prototype.unique = function() {
+  return this.filter(function(value, index, self) {
+    return self.indexOf(value) === index;
+  });
+};
