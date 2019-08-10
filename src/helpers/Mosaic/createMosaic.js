@@ -28,7 +28,6 @@ const getEuclideanDistance = (rgb1, rgb2) => {
       4 * (rgb2[1] - rgb1[1]) ** 2 +
       3 * (rgb2[2] - rgb1[2]) ** 2
   );
-  console.log(standard, adjusted);
   return adjusted;
 };
 
@@ -57,13 +56,6 @@ const test = (palette, fragmentMap) => {
     });
     const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
     const bestFitImage = palette[bestFitIndex].image;
-    // if (i == 0) {
-    //   // console.log(palette[bestFitIndex]);
-    // }
-    const x = palette[bestFitIndex];
-    if (i == 0) {
-      console.log(x);
-    }
   });
 };
 
@@ -89,7 +81,7 @@ export default async (src, width, height, paths) => {
     })
     .filter(obj => obj !== null);
 
-  test(colorMappedImagePallete, mosaicMappedByColor);
+  // test(colorMappedImagePallete, mosaicMappedByColor);
   // Finally, find the mosaic images that best match each required fragment of the original image
   return findBestImages(colorMappedImagePallete, mosaicMappedByColor);
 };
