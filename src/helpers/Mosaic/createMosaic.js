@@ -7,8 +7,26 @@ const toImages = canvi => {
 };
 
 const mapFragmentsByColor = mosaic => {
-  // Improve performance, this is heaviest operation TODO
-  // This should be easy to send to a Web Worker as it does not access DOM
+  // For each x,y position returned by fragmentTOCanvi, get the average color
+  // let size = 32;
+  // const { fragments, image, width, height } = mosaic;
+
+  // let result = [];
+
+  // for (let i = 0; i < fragments.length; i++) {
+  //   const x = fragments[i].x;
+  //   const y = fragments[i].y;
+
+  //   const canvas = document.createElement("canvas");
+  //   canvas.width = size;
+  //   canvas.height = size;
+  //   const ctx = canvas.getContext("2d");
+  //   ctx.drawImage(image, x, y, size, size, 0, 0, 32, 32);
+  //   const rgb = getAverageColor(canvas);
+  //   result.push({ canvas, rgb });
+  // }
+  // return result;
+
   return {
     ...mosaic,
     fragments: mosaic.fragments.map(fragment => {
@@ -48,19 +66,6 @@ const findBestImages = (palette, fragmentMap) => {
       return { ...fragment, mosaicImage: bestFitImage };
     })
   };
-};
-const test = (palette, fragmentMap) => {
-  fragmentMap.fragments.forEach((fragment, i) => {
-    const distances = [];
-    palette.forEach(image => {
-      distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
-      if (i == 0) {
-        // console.log(image.rgb, image.image.src);
-      }
-    });
-    const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
-    const bestFitImage = palette[bestFitIndex].image;
-  });
 };
 
 export default async (src, width, height, paths, scale = 1) => {
@@ -114,12 +119,11 @@ export default async (src, width, height, paths, scale = 1) => {
   const result = findBestImages(colorMappedImagePallete, mosaicMappedByColor);
   const end = performance.now();
 
-  console.log(isUnique(result.fragments, "mosaicImage"));
+  // console.log(isUnique(result.fragments, "mosaicImage"));
   console.log(
     `Found Best images in : ${(end - startedFindBestImages) / 1000} seconds`
   );
-  console.log(selections);
-  console.log(isUnique(selections, "i"));
+
   return result;
 };
 

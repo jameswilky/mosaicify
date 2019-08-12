@@ -63,3 +63,9 @@ HSL Colors
 
 - hue of 0 is gray scale. saturation of 0 is grayscale. increasing lightness from 0 to 100 goes from black to white
 -
+
+Further optimisations:
+
+- When finding the best match for image Image A given a list of Images from B, Instead of comparing the average color of image A with image B, create a heat map of the colors in A and a B then match them based on the most accurate color distribution. This could be further improved by matching image A with 4 different rotations of color B.
+
+- When mapping the colors to the host image, instead of comparing each picture, a breadth first approach could be taken by splitting the image into chunks and getting the average color. if contigous images are of the same average color, then we could assume that all contained images are the same color and we dont need to record the average of the inner images.

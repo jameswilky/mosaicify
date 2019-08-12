@@ -27,19 +27,22 @@ const registerEvents = $ => {
 
     const form = formToJSON($.form.elements);
     // TODO validate form
-    const pixabay = Pixabay(20);
 
     const imagePath = "../images/mosaic/avatars.png";
 
-    const image = await splitImage(imagePath, 2160, 2160, 1);
-    const canviToImages = canvi => {
-      return canvi.map(canvas => canvas.toDataURL("image/jpg"));
-    };
+    // const image = await splitImage(imagePath, 2160, 2160, 1);
+    // console.log(image);
+    // const canviToImages = canvi => {
+    //   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
+    // };
 
-    // const mappedResult = mapFragmentsByColor(result);
+    // // const mappedResult = mapFragmentsByColor(result);
     // const paths = canviToImages(image.fragments);
-    let paths = await pixabay.getImages(form.mosaicImages);
-    paths = paths.concat(canviToImages(image.fragments));
+
+    const pixabay = Pixabay(20);
+
+    let paths = await pixabay.getImages("cats");
+    // paths = paths.concat(canviToImages(image.fragments));
 
     const gotImages = performance.now();
     console.log(
@@ -79,9 +82,14 @@ const registerEvents = $ => {
     const file = document.querySelector('input[type="file"]').files[0];
     console.log(file);
 
-    toImage(file).then(
-      ({ src, width, height }) => ($.uploadedFile = { src, width, height })
-    );
+    toImage(file).then(img => {
+      // TODO find perfect size
+      scaleImage(img.src, 1000).then(({ src, width, height }) => {
+        // const el = document.querySelector(".test");
+        // el.src = src;
+        $.uploadedFile = { src, width, height };
+      });
+    });
   });
 };
 

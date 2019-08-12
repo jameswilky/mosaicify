@@ -47,25 +47,26 @@ const getClippedRegion = (img, x, y, width, height) => {
 
   canvas.width = width;
   canvas.height = height;
-
   ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
 
   return canvas;
 };
 
-const fragmentToCanvi = (image, w, h, dest, scale) => {
+const getCoords = (image, w, h, canvas, scale) => {
   // Splits an image into canvas elements of width w and height h and returns an array of canvas elements
-  const ctx = dest.getContext("2d");
   const coefficient = scale ** 2;
+  const ctx = canvas.getContext("2d");
 
+  // const coords = [];
   const canvi = [];
   for (let row = 0; row < h; row++) {
     let y = (row * h) / coefficient;
     for (let col = 0; col < w; col++) {
       let x = (col * w) / coefficient;
-      const clip = getClippedRegion(image, x, y, 32, 32);
+      const clip = getClippedRegion(image, x, y, coefficient, coefficient);
       ctx.drawImage(clip, x, y);
       canvi.push(clip);
+      // coords.push({ x, y });
     }
   }
   return canvi;
@@ -91,7 +92,7 @@ const splitImage = (src, w, h, scale) => {
       nCols: cols,
       nRows: rows,
       fragments: [],
-      fullCanvas: canvas
+      image: null
     };
     // mosaic.fragments = fragmentToCanvi(src, cols, rows, canvas, scale);
 
@@ -108,9 +109,8 @@ const splitImage = (src, w, h, scale) => {
       const temp = document.body.appendChild(img);
       temp.style.visibility = "hidden";
       temp.style.display = "none";
-      console.log(img);
-      console.log(src);
-      mosaic.fragments = fragmentToCanvi(img, cols, rows, canvas, scale);
+      mosaic.image = img;
+      mosaic.fragments = getCoords(img, cols, rows, canvas, scale);
       resolve(mosaic);
     });
   });

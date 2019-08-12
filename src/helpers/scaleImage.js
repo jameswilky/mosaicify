@@ -18,7 +18,11 @@ function scaleImage(url, width) {
       ctx.drawImage(this, 0, 0, width, height);
 
       // Run the callback on what to do with the canvas element.
-      resolve(canvas.toDataURL("image/jpg"));
+      resolve({
+        src: canvas.toDataURL("image/jpg"),
+        width: width,
+        height: height
+      });
     };
 
     img.src = url;
