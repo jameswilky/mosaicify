@@ -63,7 +63,7 @@ const fragmentToCanvi = (image, w, h, dest, scale) => {
     let y = (row * h) / coefficient;
     for (let col = 0; col < w; col++) {
       let x = (col * w) / coefficient;
-      const clip = getClippedRegion(image, x, y, w, h);
+      const clip = getClippedRegion(image, x, y, 32, 32);
       ctx.drawImage(clip, x, y);
       canvi.push(clip);
     }

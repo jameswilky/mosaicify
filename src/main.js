@@ -49,10 +49,10 @@ const registerEvents = $ => {
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, paths, 2);
+      $.mosaic = await createMosaic(src, width, height, paths, 1);
     } else {
       const { src, width, height } = await pixabay.getImage(form.targetImage);
-      $.mosaic = await createMosaic(src, width, height, paths, 2);
+      $.mosaic = await createMosaic(src, width, height, paths, 1);
     }
     const MosaicCreated = performance.now();
     console.log(
@@ -137,7 +137,3 @@ Array.prototype.unique = function() {
     return self.indexOf(value) === index;
   });
 };
-let img = document.getElementById("imageThing");
-scaleImage("../images/mosaic/blue.jpg", 600).then(img => {
-  console.log(img);
-});
