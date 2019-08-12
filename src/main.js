@@ -28,7 +28,7 @@ const registerEvents = $ => {
     const form = formToJSON($.form.elements);
     // TODO validate form
 
-    // const imagePath = "../images/mosaic/avatars.png";
+    const imagePath = "../images/mosaic/avatars.png";
 
     // const image = await splitImage(imagePath, 2160, 2160, 1);
     // console.log(image);
@@ -36,7 +36,7 @@ const registerEvents = $ => {
     //   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
     // };
 
-    // const mappedResult = mapFragmentsByColor(result);
+    // // const mappedResult = mapFragmentsByColor(result);
     // const paths = canviToImages(image.fragments);
 
     const pixabay = Pixabay(20);
@@ -52,7 +52,7 @@ const registerEvents = $ => {
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, paths, 1);
+      $.mosaic = await createMosaic(src, width, height, paths, 4);
     } else {
       const { src, width, height } = await pixabay.getImage(form.targetImage);
       $.mosaic = await createMosaic(src, width, height, paths, 1);
