@@ -5,12 +5,12 @@ import scaleImage from "../scaleImage.js";
 const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
 };
-const getPaths = async (pixabay, scale, q) => {
+const getPaths = async (pixabay, w, h, q) => {
   const paths = await pixabay.getImages(q);
 
   const compressedPaths = await Promise.all(
     // Signlificantly reduces size of images
-    paths.map(src => scaleImage(src, scale))
+    paths.map(src => scaleImage(src, w, h))
   );
   return compressedPaths.map(obj => obj.src);
 };
@@ -78,6 +78,7 @@ const findBestImages = (palette, fragmentMap) => {
 };
 
 export default async (src, width, height, pixabay, scale = 1, q) => {
+  console.log(width, height, scale);
   const start = performance.now();
   // TODO we dont need to wait for splitImage to run getImatePallete, join the promises
   // Split the input image into fragments
@@ -89,7 +90,11 @@ export default async (src, width, height, pixabay, scale = 1, q) => {
       1000} seconds `
   );
 
-  const paths = await getPaths(pixabay, Math.sqrt(width) / scale ** 2, q);
+  // Specify size of each mosaic image
+  const w = (Math.sqrt(width) * scale) / scale ** 2;
+  const h = (Math.sqrt(height) * scale) / scale ** 2;
+
+  const paths = await getPaths(pixabay, w, h, q);
 
   const imagePalette = await getImagePalette(paths);
   // Return an average rgb value for each palette image
