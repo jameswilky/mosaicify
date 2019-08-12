@@ -8,7 +8,7 @@ import scaleImage from "../src/helpers/scaleImage.js";
 
 import isUnique from "../src/helpers/isUnique.js";
 
-const scale = 4;
+const scale = 1;
 const size = 1;
 const h = 1024 * size;
 const w = 1024 * size;
@@ -23,30 +23,19 @@ const registerEvents = $ => {
     // TODO validate form
 
     const pixabay = Pixabay(20);
+    console.log(form);
+    const pathsPromise = pixabay.getImages(form.mosaicImages);
+    console.log(pathsPromise);
 
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(
-        src,
-        width,
-        height,
-        pixabay,
-        scale,
-        form.mosaicImages
-      );
+      $.mosaic = await createMosaic(src, width, height, scale, pathsPromise);
     } else {
       const image = await pixabay.getImage(form.targetImage);
       const { src, width, height } = await scaleImage(image.src, w, h);
 
-      $.mosaic = await createMosaic(
-        src,
-        width,
-        height,
-        pixabay,
-        scale,
-        form.mosaicImages
-      );
+      $.mosaic = await createMosaic(src, width, height, scale, pathsPromise);
     }
     const MosaicCreated = performance.now();
     console.log(
