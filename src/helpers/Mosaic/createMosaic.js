@@ -117,7 +117,7 @@ export default async (src, width, height, paths, scale = 1) => {
   const end = performance.now();
 
   console.log(result);
-  // console.log(isUnique(result.fragments, "mosaicImage"));
+
   console.log(
     `Found Best images in : ${(end - startedFindBestImages) / 1000} seconds`
   );

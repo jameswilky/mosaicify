@@ -64,7 +64,7 @@ export default (limit = 3) => {
       const paths = imageUrls.map(url => getBase64Image(url));
 
       const allPaths = await Promise.all(paths);
-      resolve(allPaths.unique());
+      resolve(allPaths.unique()); // Only returns unique values
     });
   };
 

@@ -12,6 +12,7 @@ import isUnique from "../src/helpers/isUnique.js";
 // Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
+    const scale = 4;
     const start = performance.now();
     e.preventDefault();
 
@@ -30,25 +31,25 @@ const registerEvents = $ => {
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, paths, 1);
+      $.mosaic = await createMosaic(src, width, height, paths, scale);
     } else {
       const image = await pixabay.getImage(form.targetImage);
       const { src, width, height } = await scaleImage(image.src, 1000, 1000);
 
-      $.mosaic = await createMosaic(src, width, height, paths, 1);
+      $.mosaic = await createMosaic(src, width, height, paths, scale);
     }
     const MosaicCreated = performance.now();
     console.log(
       `Created Mosaic in : ${(MosaicCreated - gotImages) / 1000} seconds`
     );
 
-    // const grid = document.createElement("div");
-    // grid.innerHTML = gridTemplate($.mosaic);
+    const grid = document.createElement("div");
+    grid.innerHTML = gridTemplate($.mosaic);
     const end = performance.now();
     console.log(`Created Grid in : ${(end - MosaicCreated) / 1000}`);
     console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
     // TODO implement this to append grid https://github.com/tsayen/dom-to-image
-    // document.body.appendChild(grid);
+    document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
@@ -64,7 +65,7 @@ const registerEvents = $ => {
 
     toImage(file).then(img => {
       // TODO find perfect size
-      scaleImage(img.src, 400, 400).then(({ src, width, height }) => {
+      scaleImage(img.src, 2000, 2000).then(({ src, width, height }) => {
         // const el = document.querySelector(".test");
         // el.src = src;
         $.uploadedFile = { src, width, height };
