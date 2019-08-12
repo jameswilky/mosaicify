@@ -95,10 +95,10 @@ export default async (src, width, height, paths, scale = 1) => {
   const colorMappedImagePallete = imagePalette
     .map(image => {
       const rgb = getAverageColor(image);
-      // const isTransparent = rgb => rgb[0] == 0 && rgb[1] == 0 && rgb[2] == 0;
-      // if (isTransparent(rgb)) {
-      //   return null;
-      // }
+      const isTransparent = rgb => rgb[0] == 0 && rgb[1] == 0 && rgb[2] == 0;
+      if (isTransparent(rgb)) {
+        return null;
+      }
 
       return { image: image, rgb: rgb };
     })

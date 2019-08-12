@@ -12,7 +12,7 @@ import isUnique from "../src/helpers/isUnique.js";
 // Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
-    const scale = 4;
+    const scale = 2;
     const start = performance.now();
     e.preventDefault();
 
@@ -20,9 +20,19 @@ const registerEvents = $ => {
     // TODO validate form
 
     const pixabay = Pixabay(20);
-
-    const paths = await pixabay.getImages("cats");
-    // const uniquePaths = paths.unique();
+    let paths = [];
+    const cats = await pixabay.getImages("cats");
+    const dogs = await pixabay.getImages("dogs");
+    const fish = await pixabay.getImages("fish");
+    const house = await pixabay.getImages("house");
+    const tree = await pixabay.getImages("tree");
+    const ocean = await pixabay.getImages("ocean");
+    const car = await pixabay.getImages("car");
+    const cup = await pixabay.getImages("cup");
+    const coffee = await pixabay.getImages("coffee");
+    const girl = await pixabay.getImages("girl");
+    paths.push(cats, dogs, fish, house, tree, ocean, car, cup, coffee, girl);
+    paths = paths.flat();
     const gotImages = performance.now();
     console.log(
       `Finished getImages() in : ${(gotImages - start) / 1000} seconds`
@@ -65,7 +75,7 @@ const registerEvents = $ => {
 
     toImage(file).then(img => {
       // TODO find perfect size
-      scaleImage(img.src, 2000, 2000).then(({ src, width, height }) => {
+      scaleImage(img.src, 1000, 1000).then(({ src, width, height }) => {
         // const el = document.querySelector(".test");
         // el.src = src;
         $.uploadedFile = { src, width, height };
