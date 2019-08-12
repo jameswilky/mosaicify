@@ -1,8 +1,18 @@
 import splitImage from "./splitImage.js";
 import getAverageColor from "./getAverageColor.js";
 import getImagePalette from "./getImagePalette.js";
+import scaleImage from "../scaleImage.js";
 const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
+};
+const getPaths = async (pixabay, scale) => {
+  const paths = await pixabay.getImages("cats");
+
+  const compressedPaths = await Promise.all(
+    // Signlificantly reduces size of images
+    paths.map(src => scaleImage(src, scale))
+  );
+  return compressedPaths.map(obj => obj.src);
 };
 
 const mapFragmentsByColor = mosaic => {
@@ -53,7 +63,7 @@ let selections = [];
 const findBestImages = (palette, fragmentMap) => {
   return {
     ...fragmentMap,
-    fragments: fragmentMap.fragments.map((fragment, i) => {
+    fragments: fragmentMap.fragments.map(fragment => {
       const distances = [];
       palette.forEach(image => {
         distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
@@ -67,7 +77,7 @@ const findBestImages = (palette, fragmentMap) => {
   };
 };
 
-export default async (src, width, height, paths, scale = 1) => {
+export default async (src, width, height, pixabay, scale = 1) => {
   const start = performance.now();
   // TODO we dont need to wait for splitImage to run getImatePallete, join the promises
   // Split the input image into fragments
@@ -78,6 +88,8 @@ export default async (src, width, height, paths, scale = 1) => {
     `Finished mapping Mosaic by color in : ${(mappedMosaicByColor - start) /
       1000} seconds `
   );
+
+  const paths = await getPaths(pixabay, Math.sqrt(width) * scale);
 
   const imagePalette = await getImagePalette(paths);
   console.log(imagePalette);

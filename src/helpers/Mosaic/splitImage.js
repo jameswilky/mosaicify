@@ -51,12 +51,13 @@ const mapColor = (image, x, y, w, h) => {
 const fragment = (image, mapColor, cols, rows, scale) => {
   // Splits an image into canvas elements and returns an array of canvas elements
   const c = scale ** 2;
+  console.log(cols, rows, c, scale);
   const fragments = [];
   for (let row = 0; row < rows; row++) {
     let y = (row * rows) / c;
     for (let col = 0; col < cols; col++) {
       let x = (col * cols) / c;
-      fragments.push(mapColor(image, x, y, c, c));
+      fragments.push(mapColor(image, x, y, cols / c, rows / c));
     }
   }
   return fragments;

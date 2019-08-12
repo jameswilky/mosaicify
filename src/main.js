@@ -8,21 +8,11 @@ import scaleImage from "../src/helpers/scaleImage.js";
 
 import isUnique from "../src/helpers/isUnique.js";
 
-const getPaths = async pixabay => {
-  const paths = await pixabay.getImages("cats");
-
-  const compressedPaths = await Promise.all(
-    // Signlificantly reduces size of images
-    paths.map(src => scaleImage(src, 32))
-  );
-  return compressedPaths.map(obj => obj.src);
-};
-// TODO convert final dom element to an image element
 // TODO refactor createMosaic into a Factory
 // Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
-    const scale = 1;
+    const scale = 4;
     const start = performance.now();
     e.preventDefault();
 
@@ -30,26 +20,20 @@ const registerEvents = $ => {
     // TODO validate form
 
     const pixabay = Pixabay(20);
-    const paths = await getPaths(pixabay);
-
-    const gotImages = performance.now();
-    console.log(
-      `Finished getImages() in : ${(gotImages - start) / 1000} seconds`
-    );
 
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, paths, scale);
+      $.mosaic = await createMosaic(src, width, height, pixabay, scale);
     } else {
       const image = await pixabay.getImage(form.targetImage);
       const { src, width, height } = await scaleImage(image.src, 1000, 1000);
 
-      $.mosaic = await createMosaic(src, width, height, paths, scale);
+      $.mosaic = await createMosaic(src, width, height, pixabay, scale);
     }
     const MosaicCreated = performance.now();
     console.log(
-      `Created Mosaic in : ${(MosaicCreated - gotImages) / 1000} seconds`
+      `Created Mosaic in : ${(MosaicCreated - start) / 1000} seconds`
     );
 
     const end = performance.now();
@@ -57,8 +41,9 @@ const registerEvents = $ => {
     const { width, height, nCols, nRows, fragments } = $.mosaic;
 
     const canvas = document.querySelector(".outputCanvas");
-    canvas.width = 1024;
-    canvas.height = 1024;
+    canvas.width = width;
+    canvas.height = height;
+
     const ctx = canvas.getContext("2d");
 
     fragments.forEach(({ mosaicImage, coords }) =>
