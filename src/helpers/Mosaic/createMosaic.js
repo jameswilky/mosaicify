@@ -8,7 +8,6 @@ const toImages = canvi => {
 
 const mapFragmentsByColor = mosaic => {
   // For each x,y position returned by fragmentTOCanvi, get the average color
-  console.log(mosaic);
   let size = 32;
   const { fragments, image, width, height } = mosaic;
 
@@ -26,7 +25,6 @@ const mapFragmentsByColor = mosaic => {
     const rgb = getAverageColor(canvas);
     result.push({ canvas, rgb });
   }
-  console.log(result);
   return result;
 
   // return {
@@ -56,7 +54,7 @@ let selections = [];
 const findBestImages = (palette, fragmentMap) => {
   return {
     ...fragmentMap,
-    fragments: fragmentMap.fragments.map((fragment, i) => {
+    fragments: fragmentMap.map((fragment, i) => {
       const distances = [];
       palette.forEach(image => {
         distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
@@ -68,19 +66,6 @@ const findBestImages = (palette, fragmentMap) => {
       return { ...fragment, mosaicImage: bestFitImage };
     })
   };
-};
-const test = (palette, fragmentMap) => {
-  fragmentMap.fragments.forEach((fragment, i) => {
-    const distances = [];
-    palette.forEach(image => {
-      distances.push(getEuclideanDistance(image.rgb, fragment.rgb));
-      if (i == 0) {
-        // console.log(image.rgb, image.image.src);
-      }
-    });
-    const bestFitIndex = distances.indexOf(Math.min.apply(null, distances));
-    const bestFitImage = palette[bestFitIndex].image;
-  });
 };
 
 export default async (src, width, height, paths, scale = 1) => {
@@ -134,12 +119,11 @@ export default async (src, width, height, paths, scale = 1) => {
   const result = findBestImages(colorMappedImagePallete, mosaicMappedByColor);
   const end = performance.now();
 
-  console.log(isUnique(result.fragments, "mosaicImage"));
+  // console.log(isUnique(result.fragments, "mosaicImage"));
   console.log(
     `Found Best images in : ${(end - startedFindBestImages) / 1000} seconds`
   );
-  console.log(selections);
-  console.log(isUnique(selections, "i"));
+
   return result;
 };
 

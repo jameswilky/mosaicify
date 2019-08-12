@@ -56,7 +56,6 @@ const getCoords = (image, w, h, scale) => {
   // Splits an image into canvas elements of width w and height h and returns an array of canvas elements
   const coefficient = scale ** 2;
 
-  console.log(image);
   const coords = [];
   for (let row = 0; row < h; row++) {
     let y = (row * h) / coefficient;
