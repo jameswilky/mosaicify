@@ -54,7 +54,10 @@ const registerEvents = $ => {
       const { src, width, height } = $.uploadedFile;
       $.mosaic = await createMosaic(src, width, height, paths, 1);
     } else {
-      const { src, width, height } = await pixabay.getImage(form.targetImage);
+      const image = await pixabay.getImage(form.targetImage);
+      console.log(image);
+      const { src, width, height } = await scaleImage(image.src, 1000, 1000);
+
       $.mosaic = await createMosaic(src, width, height, paths, 1);
     }
     const MosaicCreated = performance.now();
@@ -84,10 +87,23 @@ const registerEvents = $ => {
 
     toImage(file).then(img => {
       // TODO find perfect size
-      scaleImage(img.src, 1000).then(({ src, width, height }) => {
+      scaleImage(img.src, 1000, 1000).then(({ src, width, height }) => {
         // const el = document.querySelector(".test");
         // el.src = src;
         $.uploadedFile = { src, width, height };
+      });
+    });
+  });
+};
+const uploadFile = file => {
+  new Promise(resolve => {
+    toImage(file).then(img => {
+      // TODO find perfect size
+      scaleImage(img.src, 300, 300).then(({ src, width, height }) => {
+        // const el = document.querySelector(".test");
+        // el.src = src;
+        $.uploadedFile = { src, width, height };
+        resolve($.uploadedFile);
       });
     });
   });

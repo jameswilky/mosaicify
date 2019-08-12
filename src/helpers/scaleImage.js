@@ -1,13 +1,19 @@
-import toImage from "../helpers/toImage.js";
-
 // The function that scales an images with canvas then runs a callback.
-function scaleImage(url, width) {
+function scaleImage(url, maxWidth, maxHeight) {
   const img = new Image();
 
   // When the images is loaded, resize it in canvas.
   return new Promise(resolve => {
     img.onload = function() {
-      const height = (width / img.width) * img.height;
+      let height, width;
+      // Scale based on the highest dimension
+      if (img.width > img.height) {
+        width = maxWidth;
+        height = (maxWidth / img.width) * img.height;
+      } else {
+        height = maxHeight;
+        width = (maxHeight / img.height) * img.width;
+      }
       const canvas = document.createElement("canvas"),
         ctx = canvas.getContext("2d");
 
