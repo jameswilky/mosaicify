@@ -1,7 +1,6 @@
 import splitImage from "./splitImage.js";
 import getAverageColor from "./getAverageColor.js";
 import getImagePalette from "./getImagePalette.js";
-
 const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
 };
@@ -73,11 +72,11 @@ export default async (src, width, height, paths, scale = 1) => {
   // TODO adjust width and height to have an interger square root
 
   // Split the input image into fragments
-  const mosaic = await splitImage(src, width, height, scale);
+  const mosaicMappedByColor = await splitImage(src, width, height, scale);
   const splitedImage = performance.now();
   console.log(`Finished splitImage in ${(splitedImage - start) / 1000}`);
   // Return an average rgb value for each canvas item
-  const mosaicMappedByColor = mapFragmentsByColor(mosaic);
+  // const mosaicMappedByColor = mapFragmentsByColor(mosaic);
   const mappedMosaicByColor = performance.now();
   console.log(
     `Finished mapping Mosaic by color in : ${(mappedMosaicByColor -

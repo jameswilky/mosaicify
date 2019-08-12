@@ -9,14 +9,6 @@ import splitImage from "./helpers/Mosaic/splitImage.js";
 import getAverageColor from "../src/helpers/Mosaic/getAverageColor.js";
 import scaleImage from "../src/helpers/scaleImage.js";
 
-const mapFragmentsByColor = mosaic => {
-  return {
-    ...mosaic,
-    fragments: mosaic.fragments.map(fragment => {
-      return { fragment: fragment, rgb: getAverageColor(fragment) };
-    })
-  };
-};
 // TODO convert final dom element to an image element
 // TODO refactor createMosaic into a Factory
 // Improve performance, use webworkers
@@ -28,21 +20,9 @@ const registerEvents = $ => {
     const form = formToJSON($.form.elements);
     // TODO validate form
 
-    const imagePath = "../images/mosaic/avatars.png";
-
-    // const image = await splitImage(imagePath, 2160, 2160, 1);
-    // console.log(image);
-    // const canviToImages = canvi => {
-    //   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
-    // };
-
-    // // const mappedResult = mapFragmentsByColor(result);
-    // const paths = canviToImages(image.fragments);
-
     const pixabay = Pixabay(20);
 
     let paths = await pixabay.getImages("cats");
-    // paths = paths.concat(canviToImages(image.fragments));
 
     const gotImages = performance.now();
     console.log(
@@ -55,7 +35,6 @@ const registerEvents = $ => {
       $.mosaic = await createMosaic(src, width, height, paths, 1);
     } else {
       const image = await pixabay.getImage(form.targetImage);
-      console.log(image);
       const { src, width, height } = await scaleImage(image.src, 1000, 1000);
 
       $.mosaic = await createMosaic(src, width, height, paths, 1);
@@ -65,13 +44,13 @@ const registerEvents = $ => {
       `Created Mosaic in : ${(MosaicCreated - gotImages) / 1000} seconds`
     );
 
-    const grid = document.createElement("div");
-    grid.innerHTML = gridTemplate($.mosaic);
+    // const grid = document.createElement("div");
+    // grid.innerHTML = gridTemplate($.mosaic);
     const end = performance.now();
     console.log(`Created Grid in : ${(end - MosaicCreated) / 1000}`);
     console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
     // TODO implement this to append grid https://github.com/tsayen/dom-to-image
-    document.body.appendChild(grid);
+    // document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
@@ -87,7 +66,7 @@ const registerEvents = $ => {
 
     toImage(file).then(img => {
       // TODO find perfect size
-      scaleImage(img.src, 1000, 1000).then(({ src, width, height }) => {
+      scaleImage(img.src, 400, 400).then(({ src, width, height }) => {
         // const el = document.querySelector(".test");
         // el.src = src;
         $.uploadedFile = { src, width, height };
