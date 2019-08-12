@@ -4,7 +4,7 @@ const fac = new FastAverageColor();
 const getAverageColor = image => {
   let rgb;
   rgb = fac
-    .getColor(image)
+    .getColor(image, { mode: "precision" })
     .rgb.match(/\d+/g)
     .map(color => parseInt(color));
 

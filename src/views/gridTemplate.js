@@ -1,3 +1,5 @@
+// TODO improve performance
+// Instead of css grid use a canvas and then export as an image
 const gridTemplate = mosaic => {
   const { width, height, nCols, nRows, fragments } = mosaic;
 

@@ -5,59 +5,67 @@ import getFileName from "./helpers/getFileName.js";
 import toImage from "./helpers/toImage.js";
 import Pixabay from "./helpers/pixabay.js";
 import getBase64Image from "./helpers/getBase64Image.js";
+import splitImage from "./helpers/Mosaic/splitImage.js";
+import getAverageColor from "../src/helpers/Mosaic/getAverageColor.js";
+import scaleImage from "../src/helpers/scaleImage.js";
 
+const mapFragmentsByColor = mosaic => {
+  return {
+    ...mosaic,
+    fragments: mosaic.fragments.map(fragment => {
+      return { fragment: fragment, rgb: getAverageColor(fragment) };
+    })
+  };
+};
 // TODO convert final dom element to an image element
 // TODO refactor createMosaic into a Factory
 // Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
+    const start = performance.now();
     e.preventDefault();
 
     const form = formToJSON($.form.elements);
     // TODO validate form
+    const pixabay = Pixabay(20);
 
-    //If Valid...
-    const pixabay = Pixabay(20); // Used for pixabay api
-    const paths = await pixabay.getImages(form.mosaicImages);
-    const uniquePaths = paths.unique();
+    const imagePath = "../images/mosaic/avatars.png";
 
-    // const prefix = "../images/mosaic/";
-    // const uniquePaths = [
-    //   `${prefix}black.jpg`,
-    //   `${prefix}beige.jpg`,
-    //   `${prefix}blue.jpg`,
-    //   `${prefix}gray.jpg`,
-    //   `${prefix}green.jpg`,
-    //   `${prefix}orange.jpg`,
-    //   `${prefix}purple.jpg`,
-    //   `${prefix}orange.jpg`,
-    //   `${prefix}purple.jpg`,
-    //   `${prefix}red.jpg`,
-    //   `${prefix}white.jpg`,
-    //   `${prefix}yellow.jpg`
-    // ];
+    const image = await splitImage(imagePath, 2160, 2160, 1);
+    const canviToImages = canvi => {
+      return canvi.map(canvas => canvas.toDataURL("image/jpg"));
+    };
+
+    // const mappedResult = mapFragmentsByColor(result);
+    // const paths = canviToImages(image.fragments);
+    let paths = await pixabay.getImages(form.mosaicImages);
+    paths = paths.concat(canviToImages(image.fragments));
+
+    const gotImages = performance.now();
+    console.log(
+      `Finished getImages() in : ${(gotImages - start) / 1000} seconds`
+    );
 
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, uniquePaths, 2);
+      $.mosaic = await createMosaic(src, width, height, paths, 2);
     } else {
       const { src, width, height } = await pixabay.getImage(form.targetImage);
-      $.mosaic = await createMosaic(src, width, height, uniquePaths, 1);
+      $.mosaic = await createMosaic(src, width, height, paths, 2);
     }
-
-    // //}
-    // //else {
-    // // const {src,width,height} = Fetch Host Image
-    // // const paths = Fetch Mosaic Images
-    // //$.mosaic = await createMosaic(src, width, height, paths);
-    // //}
+    const MosaicCreated = performance.now();
+    console.log(
+      `Created Mosaic in : ${(MosaicCreated - gotImages) / 1000} seconds`
+    );
 
     const grid = document.createElement("div");
     grid.innerHTML = gridTemplate($.mosaic);
-    console.log("finished");
+    const end = performance.now();
+    console.log(`Created Grid in : ${(end - MosaicCreated) / 1000}`);
+    console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
     // TODO implement this to append grid https://github.com/tsayen/dom-to-image
-    // document.body.appendChild(grid);
+    document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
@@ -89,39 +97,39 @@ window.onload = () => {
   registerEvents($);
 };
 
-// const App = {
-//   events: {
-//     submit: e => {
-//       e.preventDefault();
-//     },
-//     clickHandlers: e => {
-//       if (e.target.classList.contains("submit")) {
-//         e.preventDefault();
-//       }
-//     }
-//   },
-//   $: {},
-//   cacheDOM: function() {
-//     this.$ = document.querySelector("body");
-//     return {
-//       submit: this.$.querySelector(".submit")
-//     };
-//   },
-//   createEvents: events => {
-//     const { clickHandlers } = events;
-//     document.addEventListener("click", clickHandlers);
-//   },
-//   deleteEvents: events => {
-//     const { clickHandlers } = events;
-//     document.removeEventListener("click", clickHandlers);
-//   },
-//   render: function() {
-//     this.deleteEvents(this.events);
-//     this.createEvents(this.events);
-//     Object.assign(this.$, this.cacheDOM());
-//   }
-// };
-// App.render();
+const App = {
+  events: {
+    submit: e => {
+      e.preventDefault();
+    },
+    clickHandlers: e => {
+      if (e.target.classList.contains("submit")) {
+        e.preventDefault();
+      }
+    }
+  },
+  $: {},
+  cacheDOM: function() {
+    this.$ = document.querySelector("body");
+    return {
+      submit: this.$.querySelector(".submit")
+    };
+  },
+  createEvents: events => {
+    const { clickHandlers } = events;
+    document.addEventListener("click", clickHandlers);
+  },
+  deleteEvents: events => {
+    const { clickHandlers } = events;
+    document.removeEventListener("click", clickHandlers);
+  },
+  render: function() {
+    this.deleteEvents(this.events);
+    this.createEvents(this.events);
+    Object.assign(this.$, this.cacheDOM());
+  }
+};
+App.render();
 
 /* Primitive modificatons*/
 Array.prototype.unique = function() {
@@ -129,3 +137,7 @@ Array.prototype.unique = function() {
     return self.indexOf(value) === index;
   });
 };
+let img = document.getElementById("imageThing");
+scaleImage("../images/mosaic/blue.jpg", 600).then(img => {
+  console.log(img);
+});

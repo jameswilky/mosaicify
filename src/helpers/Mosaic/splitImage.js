@@ -72,6 +72,7 @@ const fragmentToCanvi = (image, w, h, dest, scale) => {
 };
 
 const splitImage = (src, w, h, scale) => {
+  // TODO improve performance
   // Takes an in image url, a width and a height and returns an object containing the fragmented images
 
   w = Math.floor(Math.sqrt(w)) ** 2;
@@ -92,16 +93,35 @@ const splitImage = (src, w, h, scale) => {
       fragments: [],
       fullCanvas: canvas
     };
-    resizeImage(src, w, h).then(img => {
-      // This does not need to be seen, but needs to be physically added to DOM to be recognised as an image correctly
+    // mosaic.fragments = fragmentToCanvi(src, cols, rows, canvas, scale);
+
+    // resizeImage(src, w, h).then(img => {
+    // This does not need to be seen, but needs to be physically added to DOM to be recognised as an image correctly
+    // const temp = document.body.appendChild(img);
+    // temp.style.visibility = "hidden";
+    // temp.style.display = "none";
+    // console.log(img);
+    // console.log(src);
+    // mosaic.fragments = fragmentToCanvi(img, cols, rows, canvas, scale);
+
+    createImage(src).then(img => {
       const temp = document.body.appendChild(img);
       temp.style.visibility = "hidden";
       temp.style.display = "none";
-
+      console.log(img);
+      console.log(src);
       mosaic.fragments = fragmentToCanvi(img, cols, rows, canvas, scale);
       resolve(mosaic);
     });
   });
 };
+
+const createImage = path =>
+  new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+
+    img.src = path;
+  });
 
 export default splitImage;

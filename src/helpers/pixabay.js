@@ -61,6 +61,7 @@ export default (limit = 3) => {
     );
 
     const paths = imageUrls.map(url => getBase64Image(url));
+
     return await Promise.all(paths);
   };
 
