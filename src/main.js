@@ -8,8 +8,8 @@ import scaleImage from "../src/helpers/scaleImage.js";
 
 import isUnique from "../src/helpers/isUnique.js";
 
-const scale = 1;
-const size = 1;
+const scale = 4;
+const size = 2;
 const h = 1024 * size;
 const w = 1024 * size;
 // TODO refactor createMosaic into a Factory

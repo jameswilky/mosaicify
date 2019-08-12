@@ -9,7 +9,7 @@ const getPaths = async (w, h, pathsPromise) => {
 
   const compressedPaths = await Promise.all(
     // Signlificantly reduces size of images
-    paths.map(src => scaleImage(src, w, h))
+    paths.map(src => scaleImage(src, w))
   );
   return compressedPaths.map(obj => obj.src);
 };
