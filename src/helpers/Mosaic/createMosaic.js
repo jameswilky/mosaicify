@@ -7,14 +7,34 @@ const toImages = canvi => {
 };
 
 const mapFragmentsByColor = mosaic => {
-  // Improve performance, this is heaviest operation TODO
-  // This should be easy to send to a Web Worker as it does not access DOM
-  return {
-    ...mosaic,
-    fragments: mosaic.fragments.map(fragment => {
-      return { fragment: fragment, rgb: getAverageColor(fragment) };
-    })
-  };
+  // For each x,y position returned by fragmentTOCanvi, get the average color
+  console.log(mosaic);
+  let size = 32;
+  const { fragments, image, width, height } = mosaic;
+
+  let result = [];
+
+  for (let i = 0; i < fragments.length; i++) {
+    const x = fragments[i].x;
+    const y = fragments[i].y;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, x, y, size, size, 0, 0, 32, 32);
+    const rgb = getAverageColor(canvas);
+    result.push({ canvas, rgb });
+  }
+  console.log(result);
+  return result;
+
+  // return {
+  //   ...mosaic,
+  //   fragments: mosaic.fragments.map(fragment => {
+  //     return { fragment: fragment, rgb: getAverageColor(fragment) };
+  //   })
+  // };
 };
 const getEuclideanDistance = (rgb1, rgb2) => {
   // Takes 2 in an arrays of rgb values and returns the euclidean difference
