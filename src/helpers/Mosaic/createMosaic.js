@@ -5,8 +5,8 @@ import scaleImage from "../scaleImage.js";
 const toImages = canvi => {
   return canvi.map(canvas => canvas.toDataURL("image/jpg"));
 };
-const getPaths = async (pixabay, scale) => {
-  const paths = await pixabay.getImages("cats");
+const getPaths = async (pixabay, scale, q) => {
+  const paths = await pixabay.getImages(q);
 
   const compressedPaths = await Promise.all(
     // Signlificantly reduces size of images
@@ -77,7 +77,7 @@ const findBestImages = (palette, fragmentMap) => {
   };
 };
 
-export default async (src, width, height, pixabay, scale = 1) => {
+export default async (src, width, height, pixabay, scale = 1, q) => {
   const start = performance.now();
   // TODO we dont need to wait for splitImage to run getImatePallete, join the promises
   // Split the input image into fragments
@@ -89,10 +89,9 @@ export default async (src, width, height, pixabay, scale = 1) => {
       1000} seconds `
   );
 
-  const paths = await getPaths(pixabay, Math.sqrt(width) * scale);
+  const paths = await getPaths(pixabay, Math.sqrt(width) / scale ** 2, q);
 
   const imagePalette = await getImagePalette(paths);
-  console.log(imagePalette);
   // Return an average rgb value for each palette image
   const gotImagePalette = performance.now();
   console.log(

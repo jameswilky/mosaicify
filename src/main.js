@@ -8,11 +8,14 @@ import scaleImage from "../src/helpers/scaleImage.js";
 
 import isUnique from "../src/helpers/isUnique.js";
 
+const scale = 4;
+const size = 1;
+const h = 1024 * size;
+const w = 1024 * size;
 // TODO refactor createMosaic into a Factory
 // Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
-    const scale = 4;
     const start = performance.now();
     e.preventDefault();
 
@@ -24,12 +27,26 @@ const registerEvents = $ => {
     // Fetch Mosaic Images
     if ($.uploadedFile) {
       const { src, width, height } = $.uploadedFile;
-      $.mosaic = await createMosaic(src, width, height, pixabay, scale);
+      $.mosaic = await createMosaic(
+        src,
+        width,
+        height,
+        pixabay,
+        scale,
+        form.mosaicImages
+      );
     } else {
       const image = await pixabay.getImage(form.targetImage);
-      const { src, width, height } = await scaleImage(image.src, 1000, 1000);
+      const { src, width, height } = await scaleImage(image.src, w, h);
 
-      $.mosaic = await createMosaic(src, width, height, pixabay, scale);
+      $.mosaic = await createMosaic(
+        src,
+        width,
+        height,
+        pixabay,
+        scale,
+        form.mosaicImages
+      );
     }
     const MosaicCreated = performance.now();
     console.log(
@@ -67,7 +84,7 @@ const registerEvents = $ => {
 
     toImage(file).then(img => {
       // TODO find perfect size
-      scaleImage(img.src, 1024, 1024).then(({ src, width, height }) => {
+      scaleImage(img.src, w, h).then(({ src, width, height }) => {
         // const el = document.querySelector(".test");
         // el.src = src;
         $.uploadedFile = { src, width, height };
