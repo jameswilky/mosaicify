@@ -45,24 +45,27 @@ export default (limit = 3) => {
   };
   const getImages = async q => {
     // Querys API and finds images for each color
-    const urls = createAPICalls(q);
-    const results = await Promise.all(
-      urls.map(url => fetch(url).then(res => res.json()))
-    );
+    return new Promise(async resolve => {
+      const urls = createAPICalls(q);
+      const results = await Promise.all(
+        urls.map(url => fetch(url).then(res => res.json()))
+      );
 
-    const imageUrls = await Promise.all(
-      results
-        .map(result => {
-          return result.hits.map(({ previewURL }) => {
-            return fetch(previewURL).then(img => img.url);
-          });
-        })
-        .flat()
-    );
+      const imageUrls = await Promise.all(
+        results
+          .map(result => {
+            return result.hits.map(({ previewURL }) => {
+              return fetch(previewURL).then(img => img.url);
+            });
+          })
+          .flat()
+      );
 
-    const paths = imageUrls.map(url => getBase64Image(url));
+      const paths = imageUrls.map(url => getBase64Image(url));
 
-    return await Promise.all(paths);
+      const allPaths = await Promise.all(paths);
+      resolve(allPaths.unique());
+    });
   };
 
   return { getImage, getImages };

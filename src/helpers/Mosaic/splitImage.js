@@ -33,31 +33,25 @@ const getClippedRegion = (img, x, y, width, height) => {
 //   return canvi;
 // };
 const mapColor = (image, x, y, w, h) => {
-  console.log(w, h);
   // Reference https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
-  const canvas = new OffscreenCanvas(w, h);
-  let testCanvas = document
-    .createElement("canvas")
-    .getContext("bitmaprenderer");
+  const canvas = new OffscreenCanvas(w, h); // TODO make async
 
   const ctx = canvas.getContext("2d");
   ctx.drawImage(image, x, y, w, h, 0, 0, w, h);
 
   const rgb = getAverageColor(canvas);
   const fragment = canvas.transferToImageBitmap();
-  testCanvas.transferFromImageBitmap(fragment);
+  // testCanvas.transferFromImageBitmap(fragment); call this to turn to canvas
   return {
     fragment,
     rgb,
-    coords: { x, y },
-    testCanvas: testCanvas.canvas.toDataURL("image/jpg")
+    coords: { x, y }
   };
 };
 const fragment = (image, mapColor, w, h, scale) => {
   // Splits an image into canvas elements of width w and height h and returns an array of canvas elements
   const c = scale ** 2;
   const fragments = [];
-  console.log(c);
   for (let row = 0; row < h; row++) {
     let y = (row * h) / c;
     for (let col = 0; col < w; col++) {
@@ -75,7 +69,6 @@ const splitImage = (src, w, h, scale) => {
   h = Math.floor(Math.sqrt(h)) ** 2;
   const cols = Math.sqrt(w) * scale;
   const rows = Math.sqrt(h) * scale;
-  console.log(w, h, scale, cols, rows);
 
   return new Promise(resolve => {
     const canvas = document.createElement("canvas");
@@ -97,7 +90,6 @@ const splitImage = (src, w, h, scale) => {
       temp.style.display = "none";
       mosaic.image = img;
       mosaic.fragments = fragment(img, mapColor, cols, rows, scale);
-      console.log(mosaic);
       resolve(mosaic);
     });
   });

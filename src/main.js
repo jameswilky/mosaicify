@@ -4,11 +4,9 @@ import formToJSON from "./helpers/formToJSON.js";
 import getFileName from "./helpers/getFileName.js";
 import toImage from "./helpers/toImage.js";
 import Pixabay from "./helpers/pixabay.js";
-import getBase64Image from "./helpers/getBase64Image.js";
-import splitImage from "./helpers/Mosaic/splitImage.js";
-import getAverageColor from "../src/helpers/Mosaic/getAverageColor.js";
 import scaleImage from "../src/helpers/scaleImage.js";
 
+import isUnique from "../src/helpers/isUnique.js";
 // TODO convert final dom element to an image element
 // TODO refactor createMosaic into a Factory
 // Improve performance, use webworkers
@@ -22,8 +20,8 @@ const registerEvents = $ => {
 
     const pixabay = Pixabay(20);
 
-    let paths = await pixabay.getImages("cats");
-
+    const paths = await pixabay.getImages("cats");
+    // const uniquePaths = paths.unique();
     const gotImages = performance.now();
     console.log(
       `Finished getImages() in : ${(gotImages - start) / 1000} seconds`
