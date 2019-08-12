@@ -48,15 +48,15 @@ const mapColor = (image, x, y, w, h) => {
     coords: { x, y }
   };
 };
-const fragment = (image, mapColor, w, h, scale) => {
-  // Splits an image into canvas elements of width w and height h and returns an array of canvas elements
+const fragment = (image, mapColor, cols, rows, scale) => {
+  // Splits an image into canvas elements and returns an array of canvas elements
   const c = scale ** 2;
   const fragments = [];
-  for (let row = 0; row < h; row++) {
-    let y = (row * h) / c;
-    for (let col = 0; col < w; col++) {
-      let x = (col * w) / c;
-      fragments.push(mapColor(image, x, y, w, h));
+  for (let row = 0; row < rows; row++) {
+    let y = (row * rows) / c;
+    for (let col = 0; col < cols; col++) {
+      let x = (col * cols) / c;
+      fragments.push(mapColor(image, x, y, c, c));
     }
   }
   return fragments;

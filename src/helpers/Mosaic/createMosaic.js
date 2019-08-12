@@ -72,13 +72,10 @@ export default async (src, width, height, paths, scale = 1) => {
   // TODO we dont need to wait for splitImage to run getImatePallete, join the promises
   // Split the input image into fragments
   const mosaicMappedByColor = await splitImage(src, width, height, scale);
-  const splitedImage = performance.now();
-  console.log(`Finished splitImage in ${(splitedImage - start) / 1000}`);
 
   const mappedMosaicByColor = performance.now();
   console.log(
-    `Finished mapping Mosaic by color in : ${(mappedMosaicByColor -
-      splitedImage) /
+    `Finished mapping Mosaic by color in : ${(mappedMosaicByColor - start) /
       1000} seconds `
   );
 

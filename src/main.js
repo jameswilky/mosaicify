@@ -7,12 +7,22 @@ import Pixabay from "./helpers/pixabay.js";
 import scaleImage from "../src/helpers/scaleImage.js";
 
 import isUnique from "../src/helpers/isUnique.js";
+
+const getPaths = async pixabay => {
+  const paths = await pixabay.getImages("cats");
+
+  const compressedPaths = await Promise.all(
+    // Signlificantly reduces size of images
+    paths.map(src => scaleImage(src, 32))
+  );
+  return compressedPaths.map(obj => obj.src);
+};
 // TODO convert final dom element to an image element
 // TODO refactor createMosaic into a Factory
 // Improve performance, use webworkers
 const registerEvents = $ => {
   $.submit.addEventListener("click", async e => {
-    const scale = 2;
+    const scale = 1;
     const start = performance.now();
     e.preventDefault();
 
@@ -20,19 +30,8 @@ const registerEvents = $ => {
     // TODO validate form
 
     const pixabay = Pixabay(20);
-    let paths = [];
-    const cats = await pixabay.getImages("cats");
-    const dogs = await pixabay.getImages("dogs");
-    const fish = await pixabay.getImages("fish");
-    const house = await pixabay.getImages("house");
-    const tree = await pixabay.getImages("tree");
-    const ocean = await pixabay.getImages("ocean");
-    const car = await pixabay.getImages("car");
-    const cup = await pixabay.getImages("cup");
-    const coffee = await pixabay.getImages("coffee");
-    const girl = await pixabay.getImages("girl");
-    paths.push(cats, dogs, fish, house, tree, ocean, car, cup, coffee, girl);
-    paths = paths.flat();
+    const paths = await getPaths(pixabay);
+
     const gotImages = performance.now();
     console.log(
       `Finished getImages() in : ${(gotImages - start) / 1000} seconds`
@@ -53,13 +52,22 @@ const registerEvents = $ => {
       `Created Mosaic in : ${(MosaicCreated - gotImages) / 1000} seconds`
     );
 
-    const grid = document.createElement("div");
-    grid.innerHTML = gridTemplate($.mosaic);
     const end = performance.now();
+
+    const { width, height, nCols, nRows, fragments } = $.mosaic;
+
+    const canvas = document.querySelector(".outputCanvas");
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const ctx = canvas.getContext("2d");
+
+    fragments.forEach(({ mosaicImage, coords }) =>
+      ctx.drawImage(mosaicImage, coords.x, coords.y)
+    );
+
     console.log(`Created Grid in : ${(end - MosaicCreated) / 1000}`);
     console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
     // TODO implement this to append grid https://github.com/tsayen/dom-to-image
-    document.body.appendChild(grid);
   });
 
   $.fileInput.addEventListener("change", function() {
@@ -71,11 +79,10 @@ const registerEvents = $ => {
     // Convert uploaded Image to a file
 
     const file = document.querySelector('input[type="file"]').files[0];
-    console.log(file);
 
     toImage(file).then(img => {
       // TODO find perfect size
-      scaleImage(img.src, 1000, 1000).then(({ src, width, height }) => {
+      scaleImage(img.src, 1024, 1024).then(({ src, width, height }) => {
         // const el = document.querySelector(".test");
         // el.src = src;
         $.uploadedFile = { src, width, height };
@@ -149,3 +156,28 @@ Array.prototype.unique = function() {
     return self.indexOf(value) === index;
   });
 };
+
+function roughSizeOfObject(object) {
+  var objectList = [];
+  var stack = [object];
+  var bytes = 0;
+
+  while (stack.length) {
+    var value = stack.pop();
+
+    if (typeof value === "boolean") {
+      bytes += 4;
+    } else if (typeof value === "string") {
+      bytes += value.length * 2;
+    } else if (typeof value === "number") {
+      bytes += 8;
+    } else if (typeof value === "object" && objectList.indexOf(value) === -1) {
+      objectList.push(value);
+
+      for (var i in value) {
+        stack.push(value[i]);
+      }
+    }
+  }
+  return bytes;
+}
