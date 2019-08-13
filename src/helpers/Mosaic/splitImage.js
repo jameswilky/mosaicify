@@ -48,18 +48,35 @@ const splitImage = (src, w, h, scale) => {
       image: null
     };
 
-    createImage(src).then(img => {
-      mosaic.image = img;
-      mosaic.fragments = fragment(img, mapColor, cols, rows, scale);
-      resolve(mosaic);
+    createImage(src, w, h).then(imgData => {
+      // mosaic.image = img;
+      // const myWorker = new Worker("../../../src/worker.js");
+      // myWorker.postMessage(
+      //   JSON.parse(JSON.stringify({ imgData, cols, rows, scale }))
+      // );
+      // myWorker.onmessage = msg => {
+      //   console.log(msg);
+      //   // mosaic.fragments = msg.data
+      //   // mosaic.image = msg.img
+      //   resolve(mosaic);
+      // };
     });
   });
 };
 
-const createImage = path =>
+const createImage = (path, w, h) =>
   new Promise(resolve => {
     const img = new Image();
-    img.onload = () => resolve(img);
+    img.onload = () => {
+      // const canvas = document.createElement("canvas"); // TODO make async
+      // canvas.width = w;
+      // canvas.height = h;
+      // const ctx = canvas.getContext("2d");
+      // ctx.drawImage(img, 0, 0);
+      // const imageData = ctx.getImageData(0, 0, w, h);
+      // resolve(imageData);
+      resolve(img);
+    };
 
     img.src = path;
   });

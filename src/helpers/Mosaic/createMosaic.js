@@ -51,7 +51,7 @@ export default async (src, width, height, scale = 1, pathsPromise) => {
   const imageWidth = (Math.sqrt(width) * scale) / scale ** 2;
   const imageHeight = (Math.sqrt(height) * scale) / scale ** 2;
 
-  // Split the host image and assign an rgb value to each fragment
+  //Split the host image and assign an rgb value to each fragment
   // Retreive a list of images to create the mosaic
   const [hostImageMappedByColor, imagePalette] = await Promise.all([
     splitImage(src, width, height, scale),
@@ -64,6 +64,15 @@ export default async (src, width, height, scale = 1, pathsPromise) => {
     })
   ]);
 
+  // const hostImageMappedByColor = await splitImage(src, width, height, scale);
+  // const imagePalette = await new Promise(resolve => {
+  //   getPaths(imageWidth, imageHeight, pathsPromise).then(paths =>
+  //     getImagePalette(paths).then(palette => {
+  //       resolve(palette);
+  //     })
+  //   );
+  // });
+
   // Map an rgb color value to each mosaic image
   const colorMappedImagePallete = imagePalette
     .map(image => {
@@ -75,7 +84,6 @@ export default async (src, width, height, scale = 1, pathsPromise) => {
       return { image: image, rgb: rgb };
     })
     .filter(obj => obj !== null);
-  console.log(imagePalette, hostImageMappedByColor);
 
   // Find best image appears to be significantly reducing the amount of images used
   const result = findBestImages(
