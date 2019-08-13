@@ -15,7 +15,7 @@ const App = pixabay => {
     backButton: document.querySelector("button[type=back]"),
     downloadButton: document.querySelector("button[type=download]"),
     downloadLink: document.querySelector("a[type=download]"),
-    hostImageInput: document.querySelector("input[name=hostImage]"),
+    hostImageInput: document.querySelector("input[name=hostImageInput]"),
     preview: document.querySelector(".preview"),
     previewError: document.querySelector(".previewError")
   };
@@ -75,8 +75,7 @@ const App = pixabay => {
     return new Promise(resolve => {
       toImage(file).then(img => {
         scaleImage(img.src, w, h).then(({ src, width, height }) => {
-          state.uploadedFile = { src, width, height };
-          resolve(uploadedFile);
+          resolve({ src, width, height });
         });
       });
     });
@@ -94,25 +93,25 @@ const App = pixabay => {
 
       // TODO validate form
 
-      const { mosaicImages, hostImage } = formToJSON($.form.elements);
-      const pathsPromise = pixabay.getImages(mosaicImages);
+      const { mosaicImagesInput, hostImageInput } = formToJSON($.form.elements);
+      const mosaicImages = await pixabay.getImages(mosaicImagesInput);
 
       showElement("loading");
-
-      const image = !state.uploadedFile
-        ? await pixabay.getImage(hostImage)
+      console.log(state.uploadedFile);
+      const hostImage = !state.uploadedFile
+        ? await pixabay.getImage(hostImageInput)
         : null;
 
       const { src, width, height } = state.uploadedFile
         ? state.uploadedFile
-        : await scaleImage(image.src, state.settings.w, state.settings.h);
+        : await scaleImage(hostImage.src, state.settings.w, state.settings.h);
 
       state.mosaic = await createMosaic(
         src,
         width,
         height,
         state.settings.scale,
-        pathsPromise
+        mosaicImages
       );
 
       drawMosaic(state.mosaic, $.canvas);
@@ -122,15 +121,20 @@ const App = pixabay => {
 
       console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
     });
-    $.fileInput.addEventListener("change", function() {
+    $.fileInput.addEventListener("change", async function() {
       // Set form input to file name
       const fileName = getFileName(this.value).split(".")[0];
-      const target = $.form.querySelector("input[name=targetImage]");
+      const target = $.form.querySelector("input[name=hostImageInput]");
       target.value = fileName;
 
       // Convert uploaded Image to a file
       const file = document.querySelector('input[type="file"]').files[0];
-      state.uploadedImage = uploadImage(file, state.width, state.height);
+      console.log(file);
+      state.uploadedFile = await uploadImage(
+        file,
+        state.settings.w,
+        state.settings.h
+      );
     });
 
     let timer;

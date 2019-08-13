@@ -10,7 +10,7 @@ const createMosaic = async (
   hostWidth,
   hostHeight,
   scale = 1,
-  pathsPromise
+  mosaicImages
 ) => {
   // Specify size of each mosaic images
   const imagesWidth = (Math.sqrt(hostWidth) * scale) / scale ** 2;
@@ -64,19 +64,18 @@ const createMosaic = async (
   };
 
   const createImagePalette = () => {
-    const getPaths = async () => {
-      // Takes in a Promise that returns images from API
-      const paths = await pathsPromise;
-      const compressedPaths = await Promise.all(
+    const compressImages = async () => {
+      // Takes in a list of images and compresses them
+      const compressedImages = await Promise.all(
         // Signlificantly reduces size of images
         // Stretch images into a square shape
-        paths.map(src => scaleImage(src, imagesWidth))
+        mosaicImages.map(src => scaleImage(src, imagesWidth))
       );
-      return compressedPaths.map(obj => obj.src);
+      return compressedImages.map(obj => obj.src);
     };
     return new Promise(resolve => {
-      getPaths(imagesWidth, imagesHeight, pathsPromise).then(paths =>
-        createImages(paths).then(palette => {
+      compressImages(imagesWidth, imagesHeight, mosaicImages).then(images =>
+        createImages(images).then(palette => {
           resolve(palette);
         })
       );
