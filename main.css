@@ -173,17 +173,14 @@ input:-webkit-autofill {
 }
 
 body {
-  min-height: calc(100vh);
+  /* min-height: calc(100%); */
+  min-height: calc(100vh + 300px);
 }
 body[theme="light"] {
   background-image: var(--rainbow);
 }
 body[theme="dark"] {
   background-color: var(--lightBlack);
-}
-
-.inputImage {
-  display: none;
 }
 
 header {
@@ -280,6 +277,22 @@ h1[theme="dark"] {
   color: var(--white);
 }
 
+.preview {
+  width: 250px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+.previewError {
+  position: relative;
+  font-weight: 100;
+  font-size: 1.2rem;
+
+  text-align: center;
+  padding: 20px;
+  display: none;
+  color: #ff4136;
+  display: none;
+}
 /* form inputs*/
 form div:first-child * {
   margin: 0 0 10px 0;

@@ -14,24 +14,33 @@ const App = pixabay => {
     loading: document.querySelector(".loading"),
     backButton: document.querySelector("button[type=back]"),
     downloadButton: document.querySelector("button[type=download]"),
-    downloadLink: document.querySelector("a[type=download]")
+    downloadLink: document.querySelector("a[type=download]"),
+    hostImageInput: document.querySelector("input[name=hostImage]"),
+    preview: document.querySelector(".preview"),
+    previewError: document.querySelector(".previewError")
   };
 
   const state = {
     uploadedFile: null, // is assigned with uploading after an image is uploaded
     mosaic: null,
     settings: {
-      scale: 2,
+      scale: 4,
       h: 1024 * 0.25,
       w: 1024 * 0.25
-    },
-    views: {
-      searchForm: null
     }
   };
 
-  const cacheHomepage = () => {
-    return document.forms["searchForm"].cloneNode(true);
+  const showError = error => {
+    $.preview.src = "";
+    $.preview.style.display = "none";
+    $.previewError.style.display = "block";
+    $.previewError.innerHTML = error;
+  };
+  const showPreviewImage = src => {
+    $.preview.style.display = "inline";
+    $.previewError.style.display = "none";
+    $.preview.src = src;
+    $.previewError.innerHTML = "";
   };
 
   const showElement = element => {
@@ -123,10 +132,23 @@ const App = pixabay => {
       const file = document.querySelector('input[type="file"]').files[0];
       state.uploadedImage = uploadImage(file, state.width, state.height);
     });
+
+    let timer;
+    $.hostImageInput.addEventListener("keyup", () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        pixabay.getImage($.hostImageInput.value).then(({ src, error }) => {
+          error ? showError(error) : showPreviewImage(src);
+        });
+      }, 300);
+    });
+
+    $.hostImageInput.addEventListener("keydown", () => {
+      clearTimeout(timer);
+    });
   };
   const run = () => {
     bindEvents();
-    state.views.searchForm = cacheHomepage();
   };
   return {
     run

@@ -35,9 +35,11 @@ export default (limit = 3) => {
   const getImage = async q => {
     const res = await fetch(`${url}&q=${toQuery(q)}`);
     const data = await res.json();
+    if (data.hits.length === 0) return { error: "No images found" };
     const webformatURL = await fetch(data.hits[0].webformatURL);
     const src = await getBase64Image(webformatURL.url);
     return {
+      error: null,
       src: src,
       width: data.hits[0].webformatWidth,
       height: data.hits[0].webformatHeight
