@@ -7,7 +7,7 @@ const checkImage = path =>
   });
 const loadImg = paths => Promise.all(paths.map(checkImage));
 
-const getImagePalette = async paths => {
+const createImages = async paths => {
   return await loadImg(paths);
 };
-export default getImagePalette;
+export default createImages;
