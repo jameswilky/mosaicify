@@ -1,5 +1,5 @@
-import keys from "../../keys.js";
-import getBase64Image from "../helpers/getBase64Image.js";
+import keys from "../keys.js";
+import { getBase64Image } from "./utilities.js";
 export default (limit = 3) => {
   const key = keys.PIXABAY_API_KEY;
   const url = `https://pixabay.com/api/?key=${key}&safesearch=true&per_page=${limit}`;

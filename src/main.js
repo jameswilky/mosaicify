@@ -1,10 +1,6 @@
-import createMosaic from "./helpers/Mosaic/createMosaic.js";
-import gridTemplate from "./views/gridTemplate.js";
-import formToJSON from "./helpers/formToJSON.js";
-import getFileName from "./helpers/getFileName.js";
-import toImage from "./helpers/toImage.js";
-import Pixabay from "./helpers/pixabay.js";
-import scaleImage from "../src/helpers/scaleImage.js";
+import createMosaic from "./createMosaic.js";
+import Pixabay from "./pixabay.js";
+import { formToJSON, scaleImage, getFileName, toImage } from "./utilities.js";
 const drawMosaic = (mosaic, canvas) => {
   const { width, height, fragments } = mosaic;
 
