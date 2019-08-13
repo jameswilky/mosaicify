@@ -151,19 +151,6 @@ export const toImage = file => {
   });
 };
 
-export const createImages = async paths => {
-  const checkImage = path =>
-    new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-
-      img.src = path;
-    });
-  const loadImg = paths => Promise.all(paths.map(checkImage));
-
-  return await loadImg(paths);
-};
-
 export const createImage = path =>
   new Promise(resolve => {
     const img = new Image();
@@ -171,3 +158,8 @@ export const createImage = path =>
 
     img.src = path;
   });
+
+export const createImages = async paths => {
+  const loadImg = paths => Promise.all(paths.map(createImage));
+  return await loadImg(paths);
+};

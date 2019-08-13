@@ -16,21 +16,19 @@
     />
     <link rel="stylesheet" href="main.css" />
   </head>
-  <body theme="dark">
-    <img class="inputImage" alt="" />
+  <body theme="light">
     <main>
-      <section class="searchContainer">
-        <ul id="imagesList"></ul>
+      <section class="container">
         <header>
-          <h1 theme="dark">Mosaicify</h1>
+          <h1 theme="light">Mosaicify</h1>
         </header>
         <form name="searchForm">
           <div>
             <div>
-              <p theme="dark">Create a Mosaic of</p>
+              <p theme="light">Create a Mosaic of</p>
               <input
-                theme="dark"
-                name="targetImage"
+                theme="light"
+                name="hostImage"
                 type="text"
                 placeholder="an image"
               />
@@ -38,9 +36,9 @@
             </div>
 
             <div>
-              <p theme="dark">out of</p>
+              <p theme="light">out of</p>
               <input
-                theme="dark"
+                theme="light"
                 name="mosaicImages"
                 type="text"
                 placeholder="other images"
@@ -50,7 +48,7 @@
           </div>
           <div>
             <label for="fileUpload">
-              <p content="upload" theme="dark">
+              <p content="upload" theme="light">
                 or upload from disk
                 <i class="fas fa-file-upload"></i></p
             ></label>
@@ -63,10 +61,28 @@
           </div>
           <div><button class="submit" type="submit">Mosaicify !</button></div>
         </form>
-      </section>
-      <section class="mainContainer">
-        <img class="test" src="" alt="" />
-        <canvas class="outputCanvas"></canvas>
+        <div class="loading">
+          <p>Mosaicifying, Please Wait ...</p>
+        </div>
+        <div class="mosaicContainer">
+          <canvas class="mosaicCanvas"></canvas>
+          <div class="btnContainer">
+            <a type="back" href="/">
+              <button type="back">
+                <i class="fas fa-arrow-left"></i>
+
+                Back
+              </button>
+            </a>
+
+            <a type="download" download="mosaic.jpg">
+              <button type="download">
+                Download
+                <i class="fa fa-download" aria-hidden="true"></i>
+              </button>
+            </a>
+          </div>
+        </div>
       </section>
       <footer></footer>
     </main>

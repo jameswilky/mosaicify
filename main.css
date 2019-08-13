@@ -208,7 +208,7 @@ h1[theme="dark"] {
   text-shadow: 3px 3px rgba(200, 170, 200, 0.1);
 }
 
-.searchContainer {
+.container {
   display: grid;
   align-self: center;
   justify-self: center;
@@ -217,7 +217,8 @@ h1[theme="dark"] {
   padding: 60px 10px 0px 10px;
   /* box-shadow: 3px 4px rgba(0, 20, 0, 0.2); */
 }
-.searchContainer form {
+.container form {
+  position: relative;
   display: grid;
   justify-items: center;
   align-items: center;
@@ -227,6 +228,56 @@ h1[theme="dark"] {
   font-weight: 700;
   text-align: center;
   height: 350px;
+  /* display: none; */
+}
+.loading {
+  margin: 30px;
+  display: grid;
+  text-align: center;
+  align-items: center;
+  justify-self: center;
+  width: 256px;
+  background-color: var(--white);
+  height: 40px;
+  border-radius: 90px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+.mosaicContainer {
+  margin: 30px;
+  position: relative;
+  display: grid;
+  justify-self: center;
+  width: 256px;
+  border-radius: 1px;
+  display: none;
+}
+
+.mosaicContainer canvas {
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btnContainer {
+  padding-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
+}
+.btnContainer button {
+  margin: 5px;
+  font-size: 1rem;
+  padding: 10px 5px 10px 5px;
+  width: 120px;
+}
+.btnContainer a {
+  color: var(--black);
+  text-decoration: none;
+}
+.btnContainer i {
+  font-size: 0.7rem;
+}
+.btnContainer a:hover {
+  color: var(--white);
 }
 
 /* form inputs*/
@@ -327,7 +378,7 @@ input[type="file"] {
   display: none;
 }
 
-button[type="submit"] {
+button {
   padding: 15px 20px 15px 20px;
   border-radius: 90px;
   font-size: 1.5rem;
@@ -340,7 +391,7 @@ button[type="submit"] {
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
-button[type="submit"]:hover {
+button:hover {
   color: var(--white);
   animation: rainbowBackground 0.8s;
   -moz-animation: rainbowBackground 0.8s infinite alternate; /* Firefox */
