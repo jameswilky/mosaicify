@@ -50,45 +50,32 @@ window.onload = () => {
       const start = performance.now();
       e.preventDefault();
 
-      const {
-        settings: { scale, w, h },
-        mosiac,
-        uploadedFile
-      } = state;
       const form = formToJSON($.form.elements);
       // TODO validate form
 
       const pixabay = Pixabay(20);
       const pathsPromise = pixabay.getImages(form.mosaicImages);
 
-      const image = !uploadedFile
+      const image = !state.uploadedFile
         ? await pixabay.getImage(form.targetImage)
         : null;
 
-      const { src, width, height } = uploadedFile
-        ? uploadedFile
-        : await scaleImage(image.src, w, h);
+      const { src, width, height } = state.uploadedFile
+        ? state.uploadedFile
+        : await scaleImage(image.src, state.settings.w, state.settings.h);
 
-      // Create Web Worker call here and listen toe response once mosaic is created
       state.mosaic = await createMosaic(
         src,
         width,
         height,
-        scale,
+        state.settings.scale,
         pathsPromise
       );
 
-      const MosaicCreated = performance.now();
-      console.log(
-        `Created Mosaic in : ${(MosaicCreated - start) / 1000} seconds`
-      );
-
+      const canvas = document.querySelector(".outputCanvas");
+      drawMosaic(state.mosaic, canvas);
       const end = performance.now();
 
-      // const canvas = document.querySelector(".outputCanvas");
-      // drawMosaic(state.mosaic, canvas);
-
-      console.log(`Created Grid in : ${(end - MosaicCreated) / 1000}`);
       console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
     });
 
@@ -100,7 +87,7 @@ window.onload = () => {
 
       // Convert uploaded Image to a file
       const file = document.querySelector('input[type="file"]').files[0];
-      state.uploadedImage = uploadImage(file, 1024, 1024);
+      state.uploadedImage = uploadImage(file, state.width, state.height);
     });
   };
   registerEvents();
