@@ -21,10 +21,8 @@ This takes along time to compute, particularly when the `scale` and `width` are 
     - The `hostImage` is then split into fragments that are mapped by their average color
     - Then `mosaicImages` are then mapped by their average color
     - Then the `colorMappedMosaicImages` are compared to the `colorMappedHostImages` by finding the shortest Euclidean distance between each RGB value. I used a modifed formula that better accounts for human perception of color values, which is explained in more detail [here](https://en.wikipedia.org/wiki/Color_difference)
-      Formula:
-      ![equation](http://www.sciweavers.org/tex2img.php?eq=%7B%5Cdisplaystyle%20%7B%5Csqrt%20%7B2%5Ctimes%20%5CDelta%20R%5E%7B2%7D%2B4%5Ctimes%20%5CDelta%20G%5E%7B2%7D%2B3%5Ctimes%20%5CDelta%20B%5E%7B2%7D%7D%7D%7D&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
 
-4.  Once the best mosaic images are found for each slice of the host image, they are drawn to the canvas and converted to an image file which can be downloaded.
+4)  Once the best mosaic images are found for each slice of the host image, they are drawn to the canvas and converted to an image file which can be downloaded.
 
 ## Pitfalls and room for improvement
 
