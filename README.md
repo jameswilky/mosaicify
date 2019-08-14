@@ -10,6 +10,10 @@ https://jameswilky.github.io/mosaicify/
 
 This takes along time to compute, particularly when the `scale` and `width` are set above 8 and 1024px respectively. Javascript is single threaded so it may look like the browser has crashed, but please wait for up to a minute
 
+## Example
+
+![alt text](https://i.ibb.co/SX7KXnb/comparison.png)
+
 ## How it works
 
 1.  The form takes in a query for the `mosaicImages` which are found on pixabay, aswell as an upload input that requires an image file which will be the `hostImage`. Alternatively, if a file is not supplied, the pixabay api is called to find a `hostImage` file.
