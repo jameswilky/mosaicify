@@ -174,7 +174,7 @@ input:-webkit-autofill {
 
 body {
   /* min-height: calc(100%); */
-  min-height: calc(100vh + 300px);
+  min-height: 100vh;
 }
 body[theme="light"] {
   background-image: var(--rainbow);
@@ -207,8 +207,6 @@ h1[theme="dark"] {
 
 .container {
   display: grid;
-  align-self: center;
-  justify-self: center;
 
   animation: fadein 2s;
   padding: 60px 10px 0px 10px;
@@ -227,8 +225,10 @@ form[name="searchForm"] {
   height: 350px;
 }
 .options {
-  position: relative;
   justify-self: center;
+  width: 100%;
+  max-width: 900px;
+  min-width: 256px;
   text-align: center;
   display: none;
   font-size: 1rem;
@@ -254,8 +254,6 @@ div[type="textInputContainer"] {
 }
 
 .options form {
-  width: 100%;
-  min-width: 256px;
   height: 400px;
   background-color: var(--white);
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
@@ -277,11 +275,11 @@ div[type="textInputContainer"] {
 input[type="range"] {
   display: grid;
   justify-self: center;
-  width: 80%;
+  width: 75%;
 }
 .range-labels {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   padding: 0 5px;
   justify-items: center;
   font-size: 0.8rem;
@@ -331,13 +329,14 @@ button[type="apply"] {
   position: relative;
   display: grid;
   justify-self: center;
-  width: 256px;
+  min-width: 256px;
   border-radius: 1px;
   display: none;
 }
 
 .mosaicContainer canvas {
   box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--black);
 }
 
 .btnContainer {

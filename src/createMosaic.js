@@ -19,13 +19,6 @@ const createMosaic = async (
   const findBestImages = (palette, fragmentMap) => {
     const getEuclideanDistance = (rgb1, rgb2) => {
       // Takes 2 in an arrays of rgb values and returns the euclidean difference
-      // "Basically" this: √((r2-r1)2 + (g2-g1)2 + (b2-b1)2)
-      const standard =
-        Math.abs(rgb2[0] - rgb1[0]) +
-        Math.abs(rgb2[1] - rgb1[1]) +
-        Math.abs(rgb2[2] - rgb1[2]);
-
-      // Reference: https://en.wikipedia.org/wiki/Color_difference
       const adjusted = Math.sqrt(
         2 * (rgb2[0] - rgb1[0]) ** 2 +
           4 * (rgb2[1] - rgb1[1]) ** 2 +

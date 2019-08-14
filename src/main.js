@@ -30,9 +30,9 @@ const App = pixabay => {
     uploadedFile: null, // is assigned with uploading after an image is uploaded
     mosaic: null,
     settings: {
-      scale: 8,
-      h: 1024,
-      w: 1024
+      scale: 4,
+      height: 256,
+      width: 256
     }
   };
 
@@ -47,6 +47,7 @@ const App = pixabay => {
     $.previewError.style.display = "none";
     $.preview.src = src;
     $.previewError.innerHTML = "";
+    document.body.style.minHeight = `calc(100vh + ${state.settings.height}px)`;
   };
 
   const showElement = element => {
@@ -55,6 +56,7 @@ const App = pixabay => {
       $.canvasContainer.style.display = "none";
       $.loading.style.display = "none";
       $.options.style.display = "none";
+      document.body.style.minHeight = `100vh`;
     } else if (element === "canvas") {
       $.form.style.display = "none";
       $.canvasContainer.style.display = "grid";
@@ -65,11 +67,13 @@ const App = pixabay => {
       $.canvasContainer.style.display = "none";
       $.loading.style.display = "grid";
       $.options.style.display = "none";
+      document.body.style.minHeight = `100vh`;
     } else if (element === "options") {
       $.form.style.display = "none";
       $.canvasContainer.style.display = "none";
       $.loading.style.display = "none";
       $.options.style.display = "block";
+      document.body.style.minHeight = `100vh`;
     }
   };
 
@@ -121,10 +125,13 @@ const App = pixabay => {
 
   const drawMosaic = (mosaic, canvas) => {
     const { width, height, fragments } = mosaic;
+    $.canvasContainer.style.width = width;
     canvas.width = width;
     canvas.height = height;
 
     const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, width, height);
     fragments.forEach(({ mosaicImage, coords }) =>
       ctx.drawImage(mosaicImage, coords.x, coords.y)
     );
@@ -143,7 +150,9 @@ const App = pixabay => {
   const createDownloadLink = () => {
     const image = $.canvas.toDataURL("image/jpg");
     $.downloadLink.href = image;
-    $.downloadLink.download = `mosaic_${state.settings.w}x${state.settings.h}`;
+    $.downloadLink.download = `mosaic_${state.settings.width}x${
+      state.settings.height
+    }`;
   };
 
   const bindEvents = () => {
@@ -151,8 +160,28 @@ const App = pixabay => {
       e.preventDefault();
 
       const { mosaicImagesInput, hostImageInput } = formToJSON($.form.elements);
+
+      if (!mosaicImagesInput && !hostImageInput) {
+        showError("Please enter some images");
+        return;
+      }
+      if (!mosaicImagesInput) {
+        showError("Please enter some mosaic images");
+        return;
+      }
+      if (!hostImageInput) {
+        showError("Please enter a host image");
+        return;
+      }
       const mosaicImages = await pixabay.getImages(mosaicImagesInput);
 
+      if (mosaicImages.length === 0) {
+        showError(
+          `No mosaic images found for "${mosaicImagesInput}", try something else.`
+        );
+        return;
+      }
+      console.log(mosaicImages, mosaicImagesInput, hostImageInput);
       state.mosaicImages = mosaicImages;
       state.hostImageInput = hostImageInput;
       // TODO validate form
@@ -169,8 +198,8 @@ const App = pixabay => {
       const file = document.querySelector('input[type="file"]').files[0];
       state.uploadedFile = await uploadImage(
         file,
-        state.settings.w,
-        state.settings.h
+        state.settings.width,
+        state.settings.height
       );
       showPreviewImage(state.uploadedFile.src);
     });
@@ -185,18 +214,28 @@ const App = pixabay => {
       }, 300);
     });
 
+    document.addEventListener("keypress", e => {
+      // Prevent form for firing on enter press, can be buggy
+      if (e.which === 13) {
+        e.preventDefault();
+      }
+    });
     $.hostImageInput.addEventListener("keydown", () => {
       clearTimeout(timer);
     });
 
-    $.applySettings.addEventListener("click", async () => {
+    $.applySettings.addEventListener("click", async e => {
+      e.preventDefault();
       const settings = formToJSON($.optionsForm);
 
-      //Round width to nearest base 2 number
-      settings.width = Math.pow(
+      //Round width to nearest base 8 number
+      state.settings.width = Math.pow(
         2,
         Math.ceil(Math.log(settings.width) / Math.log(2))
       );
+      state.settings.height = state.settings.width;
+      state.settings.scale = 2 ** Number(settings.scale);
+      console.log(state.settings);
 
       showElement("loading");
 
@@ -205,18 +244,25 @@ const App = pixabay => {
         : null;
 
       const { src, width, height } = state.uploadedFile
-        ? state.uploadedFile
-        : await scaleImage(hostImage.src, settings.width, settings.width);
-
+        ? await scaleImage(
+            state.uploadedFile.src,
+            state.settings.width,
+            state.settings.height
+          )
+        : await scaleImage(
+            hostImage.src,
+            state.settings.width,
+            state.settings.height
+          );
       state.mosaic = await createMosaic(
         src,
         width,
         height,
-        settings.scale ** 2,
+        state.settings.scale,
         state.mosaicImages
       );
-      await psuedoLoadProgress();
 
+      await psuedoLoadProgress();
       drawMosaic(state.mosaic, $.canvas);
       createDownloadLink();
       showElement("canvas");
