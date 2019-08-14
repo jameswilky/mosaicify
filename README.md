@@ -46,7 +46,7 @@ Another way to improve the speed of the color mapping would be to use [WebGL](ht
 
 ##### Use a server
 
-The overall most effective solution would be to create the mosaic on a remote server that can use languages such as Python or C++ which are much better languages for heading multithreaded computations.
+The overall most effective solution would be to create the mosaic on a remote server that can use languages such as Python or C++ which are much better languages for handling multithreaded computations.
 
 ##### Algorithm Idea
 
