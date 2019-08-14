@@ -71,3 +71,9 @@ When searching for an image on pixabay, allow the user to click through other pr
 ##### Loading bar
 
 Because the main thead is blocked, the loading bar not actually communicating how long the task is taking. So instead it just blocks the thread for another second and allows the loading bar to animate. Obviously this slows the overall computation time by a second, but hey, it looks cool.
+
+## How Long It Took
+
+![alt text](https://i.ibb.co/L0RmyKg/projecttime.png)
+
+![alt text](https://i.ibb.co/FKxHxbJ/languges.png)
