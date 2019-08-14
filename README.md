@@ -32,38 +32,38 @@ Due to time constraints there were a few features of the application that I did 
 
 Javascript is single-threaded language, which makes it not suited for computationally intensive tasks. The most intensive part of the program is during the color mapping phase which could be improved in various ways such as:
 
-###### Web Workers
+##### Web Workers
 
 When the `scale` and `width` properties are high, the event loop is blocked which prevents user interaction. The simple solution to this would be to use [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) which simply offloads the computation on to another thread and pings the main thread when it is complete. This would not increase the actual speed, but it would prevent the browser from crashing, which would also allow correct implementation of the loading bar.
 
-###### WebGL
+##### WebGL
 
 Another way to improve the speed of the color mapping would be to use [WebGL](https://en.wikipedia.org/wiki/WebGL) to take advantage of the users GPU.
 
-###### Use a server
+##### Use a server
 
 The overall most effective solution would be to create the mosaic on a remote server that can use languages such as Python or C++ which are much better languages for heading multithreaded computations.
 
-###### Algorithm Idea
+##### Algorithm Idea
 
 When mapping the colors of the host image, instead of getting the average color of each picture, get the average color of a larger slice of the host image. If two contiguous images are the same average color, we can assume that all images contained are the same color. This would drastically increase the processing speed of images with large backgrounds of the same color, as there are less fragments that need to be checked.
 
 ### Accuracy
 
-###### Heatmaps instead of Average Color
+##### Heatmaps instead of Average Color
 
 Instead of using the average color of two images, create a heatmap that compares the color distribution of each image. This could also be improved by rotating the target mosaic image to find the best fit.
 
 ### UI
 
-###### Dark/Light mode
+##### Dark/Light mode
 
 I started implementing this but did not have time to finish. If you want to get an idea of how it looks open the `index.html` file and replace the `theme` tags with a value of `light` to `dark`
 
-###### Image picker carousel
+##### Image picker carousel
 
 When searching for an image on pixabay, allow the user to click through other preview images instead of being forced to use the first result
 
-###### Loading bar
+##### Loading bar
 
 Because the main thead is blocked, the loading bar not actually communicating how long the task is taking. So instead it just blocks the thread for another second and allows the loading bar to animate. Obviously this slows the overall computation time by a second, but hey, it looks cool.
