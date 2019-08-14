@@ -118,10 +118,13 @@ const createMosaic = async (
     };
     const fragment = image => {
       // Splits an image into canvas elements and returns an array of canvas elements
+      // This is the most performance intensive part of the application
       const c = scale ** 2;
       const fragments = [];
+
       for (let row = 0; row < rows; row++) {
         let y = (row * rows) / c;
+
         for (let col = 0; col < cols; col++) {
           let x = (col * cols) / c;
           fragments.push(mapColor(image, x, y, cols / c, rows / c));

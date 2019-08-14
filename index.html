@@ -63,8 +63,34 @@
           </div>
           <div><button class="submit" type="submit">Mosaicify !</button></div>
         </form>
+        <div class="options">
+          <form>
+            <h2>Settings</h2>
+            <h5>Width</h5>
+            <div type="textInputContainer">
+              <input type="number" placeholder="1024" />
+            </div>
+            <div class="inputContainer">
+              <h5>Scale</h5>
+              <input type="range" min="1" max="5" value="2" />
+              <div class="range-labels">
+                <div class="active selected">1</div>
+                <div>2</div>
+                <div>4</div>
+                <div>8</div>
+                <div>16</div>
+              </div>
+            </div>
+          </form>
+          <button type="apply">
+            Apply Settings
+          </button>
+        </div>
         <div class="loading">
           <p>Mosaicifying, Please Wait ...</p>
+          <div class="progressBar">
+            <p>Mosaicifying, Please Wait ...</p>
+          </div>
         </div>
         <div class="mosaicContainer">
           <canvas class="mosaicCanvas"></canvas>

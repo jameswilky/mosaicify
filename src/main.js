@@ -17,14 +17,15 @@ const App = pixabay => {
     downloadLink: document.querySelector("a[type=download]"),
     hostImageInput: document.querySelector("input[name=hostImageInput]"),
     preview: document.querySelector(".preview"),
-    previewError: document.querySelector(".previewError")
+    previewError: document.querySelector(".previewError"),
+    options: document.querySelector(".options")
   };
 
   const state = {
     uploadedFile: null, // is assigned with uploading after an image is uploaded
     mosaic: null,
     settings: {
-      scale: 4,
+      scale: 8,
       h: 1024 * 0.25,
       w: 1024 * 0.25
     }
@@ -129,12 +130,12 @@ const App = pixabay => {
 
       // Convert uploaded Image to a file
       const file = document.querySelector('input[type="file"]').files[0];
-      console.log(file);
       state.uploadedFile = await uploadImage(
         file,
         state.settings.w,
         state.settings.h
       );
+      showPreviewImage(state.uploadedFile.src);
     });
 
     let timer;
