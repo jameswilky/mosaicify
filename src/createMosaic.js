@@ -60,8 +60,7 @@ const createMosaic = async (
     const compressImages = async () => {
       // Takes in a list of images and compresses them
       const compressedImages = await Promise.all(
-        // Signlificantly reduces size of images
-        // Stretch images into a square shape
+        // Significantly reduces size of images and Stretch images into a square shape
         mosaicImages.map(src => scaleImage(src, imagesWidth))
       );
       return compressedImages.map(obj => obj.src);
@@ -86,7 +85,7 @@ const createMosaic = async (
 
     const mapColor = (image, x, y, sliceWidth, sliceHeight) => {
       // Returns a slice of an image as well as its coresponding rgb value
-      const canvas = new OffscreenCanvas(sliceWidth, sliceHeight); // TODO make async
+      const canvas = new OffscreenCanvas(sliceWidth, sliceHeight);
       const ctx = canvas.getContext("2d");
       ctx.drawImage(
         image,

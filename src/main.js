@@ -8,7 +8,6 @@ const App = pixabay => {
     body: document.querySelector("body"),
     submit: document.querySelector(".submit"),
     form: document.forms["searchForm"],
-
     fileInput: document.querySelector("#fileUpload"),
     canvas: document.querySelector(".mosaicCanvas"),
     canvasContainer: document.querySelector(".mosaicContainer"),
@@ -158,9 +157,9 @@ const App = pixabay => {
   const bindEvents = () => {
     $.submit.addEventListener("click", async e => {
       e.preventDefault();
-
       const { mosaicImagesInput, hostImageInput } = formToJSON($.form.elements);
 
+      // Validate Form
       if (!mosaicImagesInput && !hostImageInput) {
         showError("Please enter some images");
         return;
@@ -173,18 +172,18 @@ const App = pixabay => {
         showError("Please enter a host image");
         return;
       }
+
       const mosaicImages = await pixabay.getImages(mosaicImagesInput);
 
+      // Return error if no images found
       if (mosaicImages.length === 0) {
         showError(
           `No mosaic images found for "${mosaicImagesInput}", try something else.`
         );
         return;
       }
-      console.log(mosaicImages, mosaicImagesInput, hostImageInput);
       state.mosaicImages = mosaicImages;
       state.hostImageInput = hostImageInput;
-      // TODO validate form
 
       showElement("options");
     });
@@ -215,7 +214,7 @@ const App = pixabay => {
     });
 
     document.addEventListener("keypress", e => {
-      // Prevent form for firing on enter press, can be buggy
+      // Prevent form from submitting on enter press, can be buggy
       if (e.which === 13) {
         e.preventDefault();
       }
@@ -235,7 +234,6 @@ const App = pixabay => {
       );
       state.settings.height = state.settings.width;
       state.settings.scale = 2 ** Number(settings.scale);
-      console.log(state.settings);
 
       showElement("loading");
 
