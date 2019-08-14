@@ -12,7 +12,7 @@ This takes along time to compute, particularly when the `scale` and `width` are 
 
 ## Example
 
-![alt text](https://i.ibb.co/SX7KXnb/comparison.png)
+![alt text](https://i.ibb.co/DVmYrwJ/Capture.png)
 
 ## How it works
 
