@@ -134,7 +134,7 @@ table {
 :root {
   --black: #111111;
   --white: whitesmoke;
-  --gray: hsla(0, 0%, 85%, 0.7);
+  --gray: hsla(0, 0%, 90%, 0.95);
   --lightBlack: rgb(40, 44, 53);
   --rainbow: linear-gradient(
     to right bottom,

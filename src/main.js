@@ -8,6 +8,7 @@ const App = pixabay => {
     body: document.querySelector("body"),
     submit: document.querySelector(".submit"),
     form: document.forms["searchForm"],
+
     fileInput: document.querySelector("#fileUpload"),
     canvas: document.querySelector(".mosaicCanvas"),
     canvasContainer: document.querySelector(".mosaicContainer"),
@@ -18,7 +19,11 @@ const App = pixabay => {
     hostImageInput: document.querySelector("input[name=hostImageInput]"),
     preview: document.querySelector(".preview"),
     previewError: document.querySelector(".previewError"),
-    options: document.querySelector(".options")
+    options: document.querySelector(".options"),
+    optionsForm: document.forms[1],
+    applySettings: document.querySelector("button[type=apply]"),
+    progressBar: document.querySelector(".progressBar"),
+    progressText: document.querySelector(".progressBar p")
   };
 
   const state = {
@@ -26,8 +31,8 @@ const App = pixabay => {
     mosaic: null,
     settings: {
       scale: 8,
-      h: 1024 * 0.25,
-      w: 1024 * 0.25
+      h: 1024,
+      w: 1024
     }
   };
 
@@ -49,15 +54,69 @@ const App = pixabay => {
       $.form.style.display = "grid";
       $.canvasContainer.style.display = "none";
       $.loading.style.display = "none";
+      $.options.style.display = "none";
     } else if (element === "canvas") {
       $.form.style.display = "none";
       $.canvasContainer.style.display = "grid";
       $.loading.style.display = "none";
+      $.options.style.display = "none";
     } else if (element === "loading") {
       $.form.style.display = "none";
       $.canvasContainer.style.display = "none";
       $.loading.style.display = "grid";
+      $.options.style.display = "none";
+    } else if (element === "options") {
+      $.form.style.display = "none";
+      $.canvasContainer.style.display = "none";
+      $.loading.style.display = "none";
+      $.options.style.display = "block";
     }
+  };
+
+  const psuedoLoadProgress = async () => {
+    // This doesnt actually correctly show the progress of the
+    // mosaic being created as i didnt get around to
+    // implementing web workers, but it still looks cool!
+
+    const paintProgress = i => {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          $.progressBar.style.width = `${i}%`;
+          $.progressText.style.width = `${i}%`;
+          if (i === 95) {
+            $.progressBar.style.borderTopRightRadius = `15px`;
+            $.progressBar.style.borderBottomRightRadius = `15px`;
+          }
+          if (i === 96) {
+            $.progressBar.style.borderTopRightRadius = `30px`;
+            $.progressBar.style.borderBottomRightRadius = `30px`;
+          }
+          if (i === 97) {
+            $.progressBar.style.borderTopRightRadius = `45px`;
+            $.progressBar.style.borderBottomRightRadius = `45px`;
+          }
+          if (i === 98) {
+            $.progressBar.style.borderTopRightRadius = `60px`;
+            $.progressBar.style.borderBottomRightRadius = `60px`;
+          }
+          if (i === 99) {
+            $.progressBar.style.borderTopRightRadius = `75px`;
+            $.progressBar.style.borderBottomRightRadius = `75px`;
+          }
+          if (i === 100) {
+            $.progressBar.style.borderTopRightRadius = `90px`;
+            $.progressBar.style.borderBottomRightRadius = `90px`;
+          }
+          resolve();
+        }, 20);
+      });
+    };
+    return new Promise(async resolve => {
+      for (let i = 0; i < 101; i++) {
+        await paintProgress(i);
+      }
+      resolve();
+    });
   };
 
   const drawMosaic = (mosaic, canvas) => {
@@ -89,38 +148,16 @@ const App = pixabay => {
 
   const bindEvents = () => {
     $.submit.addEventListener("click", async e => {
-      const start = performance.now();
       e.preventDefault();
-
-      // TODO validate form
 
       const { mosaicImagesInput, hostImageInput } = formToJSON($.form.elements);
       const mosaicImages = await pixabay.getImages(mosaicImagesInput);
 
-      showElement("loading");
-      console.log(state.uploadedFile);
-      const hostImage = !state.uploadedFile
-        ? await pixabay.getImage(hostImageInput)
-        : null;
+      state.mosaicImages = mosaicImages;
+      state.hostImageInput = hostImageInput;
+      // TODO validate form
 
-      const { src, width, height } = state.uploadedFile
-        ? state.uploadedFile
-        : await scaleImage(hostImage.src, state.settings.w, state.settings.h);
-
-      state.mosaic = await createMosaic(
-        src,
-        width,
-        height,
-        state.settings.scale,
-        mosaicImages
-      );
-
-      drawMosaic(state.mosaic, $.canvas);
-      createDownloadLink();
-      showElement("canvas");
-      const end = performance.now();
-
-      console.log(`Finished. Total Time : ${(end - start) / 1000} seconds`);
+      showElement("options");
     });
     $.fileInput.addEventListener("change", async function() {
       // Set form input to file name
@@ -150,6 +187,39 @@ const App = pixabay => {
 
     $.hostImageInput.addEventListener("keydown", () => {
       clearTimeout(timer);
+    });
+
+    $.applySettings.addEventListener("click", async () => {
+      const settings = formToJSON($.optionsForm);
+
+      //Round width to nearest base 2 number
+      settings.width = Math.pow(
+        2,
+        Math.ceil(Math.log(settings.width) / Math.log(2))
+      );
+
+      showElement("loading");
+
+      const hostImage = !state.uploadedFile
+        ? await pixabay.getImage(state.hostImageInput)
+        : null;
+
+      const { src, width, height } = state.uploadedFile
+        ? state.uploadedFile
+        : await scaleImage(hostImage.src, settings.width, settings.width);
+
+      state.mosaic = await createMosaic(
+        src,
+        width,
+        height,
+        settings.scale ** 2,
+        state.mosaicImages
+      );
+      await psuedoLoadProgress();
+
+      drawMosaic(state.mosaic, $.canvas);
+      createDownloadLink();
+      showElement("canvas");
     });
   };
   const run = () => {

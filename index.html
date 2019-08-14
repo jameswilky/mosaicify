@@ -68,11 +68,17 @@
             <h2>Settings</h2>
             <h5>Width</h5>
             <div type="textInputContainer">
-              <input type="number" placeholder="1024" />
+              <input
+                type="number"
+                name="width"
+                min="256"
+                max="2048"
+                value="256"
+              />
             </div>
             <div class="inputContainer">
               <h5>Scale</h5>
-              <input type="range" min="1" max="5" value="2" />
+              <input type="range" min="0" max="4" value="2" name="scale" />
               <div class="range-labels">
                 <div class="active selected">1</div>
                 <div>2</div>
